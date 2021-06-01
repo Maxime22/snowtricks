@@ -13,3 +13,6 @@ import bsCustomFileInput from 'bs-custom-file-input';
 // start the Stimulus application
 import './bootstrap';
 bsCustomFileInput.init();
+
+// Javascripts
+import './js/form.js';

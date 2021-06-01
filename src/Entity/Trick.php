@@ -12,6 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Trick
 {
+    const GROUPS = [
+        'Grab' => 'grab',
+        'Rotation' => 'rotation',
+        'Flip' => 'flip',
+        'Slide' => 'slide'
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -52,7 +59,7 @@ class Trick
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $mainImg;
+    private $mainImgName;
 
     /**
      * @ORM\Column(type="array", nullable=true)
@@ -132,10 +139,9 @@ class Trick
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $createdAt;
-
+        $this->createdAt = new \DateTime();
         return $this;
     }
 
@@ -144,21 +150,20 @@ class Trick
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $updatedAt;
-
+        $this->updatedAt = new \DateTime();
         return $this;
     }
 
-    public function getMainImg(): ?string
+    public function getMainImgName(): ?string
     {
-        return $this->mainImg;
+        return $this->mainImgName;
     }
 
-    public function setMainImg(?string $mainImg): self
+    public function setMainImgName(?string $mainImgName): self
     {
-        $this->mainImg = $mainImg;
+        $this->mainImgName = $mainImgName;
 
         return $this;
     }

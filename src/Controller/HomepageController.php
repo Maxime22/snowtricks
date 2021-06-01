@@ -2,19 +2,23 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+use App\Entity\Trick;
+use App\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HomepageController extends AbstractController
+class HomepageController extends BaseController
 {
     /**
-     * @Route("/", name="homepage")
+     * @Route("/", name="home")
      */
     public function index(): Response
     {
+        $tricks = $this->em->getRepository(Trick::class)->findAll();
+
         return $this->render('homepage/index.html.twig', [
-            'controller_name' => 'HomepageController',
+            'tricks' => $tricks
         ]);
     }
 }

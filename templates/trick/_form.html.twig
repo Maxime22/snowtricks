@@ -1,0 +1,43 @@
+{{ form_start(form) }}
+
+<div class="row">
+	<div class="col-md-12 form-group">
+		<div>
+			{{ form_label(form.title) }}
+		</div>
+		<div class="form_error">
+			{{ form_errors(form.title) }}
+		</div>
+		{{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+	</div>
+	<div class="col-md-12 form-group">
+		<div>
+			{{ form_label(form.trickGroup) }}
+		</div>
+		<div class="form_error">
+			{{ form_errors(form.trickGroup) }}
+		</div>
+		{{ form_widget(form.trickGroup, {'attr': {'class': 'form-select'}}) }}
+	</div>
+	<div class="col-md-12 form-group">
+		<div>
+			{{ form_label(form.content) }}
+		</div>
+		<div class="form_error">
+			{{ form_errors(form.content) }}
+		</div>
+		{{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+	</div>
+	<div>
+		<img id="trick_mainImg_img" src="">
+	</div>
+	{{ form_row(form.mainImg) }}
+</div>
+
+{{ form_widget(form) }}
+
+<div class="text-center">
+	<button id="submit_button" class="btn btn-primary">{{"save"|trans}}</button>
+</div>
+
+{{ form_end(form) }}

@@ -3,9 +3,8 @@
 {% block title %}Hello HomepageController!{% endblock %}
 
 {% block body %}
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <img class="homeBigImg" src="/images/home/snowboard.jpg" alt="Image de couverture Snowboard" />
+    <h1>Hello Maxou</h1>
     <div><a href="{{ path('trick_new') }}">Ajouter un article</a></div>
-</div>
+    <a href="{{ asset('images/tricks/uploads/' ~ 'rurouni-kenshin-60b6429879fef.jpg') }}">View Image</a>
 {% endblock %}
