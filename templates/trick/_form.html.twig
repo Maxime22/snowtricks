@@ -32,8 +32,35 @@
 		<img id="trick_mainImg_img" src="">
 	</div>
 	{{ form_row(form.mainImg) }}
-</div>
 
+	<div>
+		{{ form_label(form.photosFiles) }}
+		{{ form_errors(form.photosFiles) }}
+		<ul id="photo_field_list" data-prototype="{{ form_widget(form.photosFiles.vars.prototype)|e }}" data-ul-type="Photo" data-widget-counter="{{ form.photosFiles|length }}">
+			{% for photo in form.photosFiles %}
+				<li>
+					{{ form_errors(photo) }}
+					{{ form_widget(photo) }}
+				</li>
+			{% endfor %}
+		</ul>
+		<button type="button" class="add-another-collection-widget btn btn-primary" data-list-selector="#photo_field_list">Ajouter une image</button>
+	</div>
+
+	<div>
+		{{ form_label(form.videos) }}
+		{{ form_errors(form.videos) }}
+		<ul id="video_field_list" data-prototype="{{ form_widget(form.videos.vars.prototype)|e }}"data-ul-type="Video" data-widget-counter="{{ form.videos|length }}">
+			{% for video in form.videos %}
+				<li>
+					{{ form_errors(video) }}
+					{{ form_widget(video) }}
+				</li>
+			{% endfor %}
+		</ul>
+		<button type="button" class="add-another-collection-widget btn btn-primary" data-list-selector="#video_field_list">Ajouter une vidéo</button>
+	</div>
+</div>
 {{ form_widget(form) }}
 
 <div class="text-center">

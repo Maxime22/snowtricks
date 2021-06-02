@@ -5,11 +5,13 @@ namespace App\Form;
 use App\Entity\Trick;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class TrickType extends AbstractType
 {
@@ -45,7 +47,25 @@ class TrickType extends AbstractType
                     ])
                 ],
             ])
-            /* ->add('photos')
+            // the mapped false should not have the same name as real entity attributes
+            ->add('photosFiles', CollectionType::class, [
+                'entry_type' => FileType::class,
+                'mapped' => false,
+                'entry_options' => [
+                    'attr' => ['class' => 'tricks_photo_class'],
+                ],
+                'allow_add'=> true,
+                'allow_delete'=> true
+            ])
+            ->add('videos', CollectionType::class, [
+                'entry_type' => TextType::class,
+                'entry_options' => [
+                    'attr' => ['class' => 'tricks_video_class'],
+                ],
+                'allow_add'=> true,
+                'allow_delete'=> true
+            ])
+            /* 
             ->add('videos')
             ->add('author') */;
     }

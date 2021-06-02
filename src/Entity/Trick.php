@@ -180,6 +180,11 @@ class Trick
         return $this;
     }
 
+    public function addPhoto($photo)
+    {
+        $this->photos[] = $photo;
+    }
+
     public function getVideos(): ?array
     {
         return $this->videos;

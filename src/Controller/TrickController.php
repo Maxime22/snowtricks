@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Trick;
+use App\Entity\User;
 use App\Form\TrickType;
 use App\Service\FileUploader;
 use App\Repository\TrickRepository;
@@ -22,19 +23,40 @@ class TrickController extends BaseController
     public function new(Request $request, FileUploader $fileUploader): Response
     {
         $trick = new Trick();
+
+        // TODO : change the user when the login is done
+        $author = $this->em->getRepository(User::class)->find(1);
+
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
+
+        // TODO : delete dd
+        // dd($form->createView()->children["photos"]->vars["prototype"]);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             /** @var UploadedFile $mainImgFile */
             $mainImgFile = $form->get('mainImg')->getData();
 
+            /** @var UploadedFile[] $photoFiles */
+            $photoFiles = $form->get('photosFiles')->getData();
+
+            $videos = $form->get('videos')->getData();
+
             if ($mainImgFile) {
-                $newFilename = $fileUploader->upload($mainImgFile,$this->getParameter('mainImg_directory'));
+                $newFilename = $fileUploader->upload($mainImgFile, $this->getParameter('trickUpload_directory'));
                 $trick->setMainImgName($newFilename);
             }
 
+            if (count($photoFiles) > 0) {
+                foreach ($photoFiles as $photoFile) {
+                    $newFilename = $fileUploader->upload($photoFile, $this->getParameter('trickUpload_directory'));
+                    $trick->addPhoto($newFilename);
+                }
+            }
+
+            $trick->setAuthor($author);
+            $trick->setVideos($videos);
             $trick->setCreatedAt();
             $this->em->persist($trick);
             $this->em->flush();
