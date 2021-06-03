@@ -2,19 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity\Trick;
 use App\Entity\User;
+use App\Entity\Image;
+use App\Entity\Trick;
 use App\Form\TrickType;
 use App\Service\FileUploader;
 use App\Repository\TrickRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-/**
- * @Route("/trick")
- */
 class TrickController extends BaseController
 {
     /**
@@ -26,41 +25,10 @@ class TrickController extends BaseController
 
         // TODO : change the user when the login is done
         $author = $this->em->getRepository(User::class)->find(1);
-
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
-
-        // TODO : delete dd
-        // dd($form->createView()->children["photos"]->vars["prototype"]);
-
         if ($form->isSubmitted() && $form->isValid()) {
-
-            /** @var UploadedFile $mainImgFile */
-            $mainImgFile = $form->get('mainImg')->getData();
-
-            /** @var UploadedFile[] $photoFiles */
-            $photoFiles = $form->get('photosFiles')->getData();
-
-            $videos = $form->get('videos')->getData();
-
-            if ($mainImgFile) {
-                $newFilename = $fileUploader->upload($mainImgFile, $this->getParameter('trickUpload_directory'));
-                $trick->setMainImgName($newFilename);
-            }
-
-            if (count($photoFiles) > 0) {
-                foreach ($photoFiles as $photoFile) {
-                    $newFilename = $fileUploader->upload($photoFile, $this->getParameter('trickUpload_directory'));
-                    $trick->addPhoto($newFilename);
-                }
-            }
-
-            $trick->setAuthor($author);
-            $trick->setVideos($videos);
-            $trick->setCreatedAt();
-            $this->em->persist($trick);
-            $this->em->flush();
-
+            $this->persistValidForm($form, $fileUploader, $trick, $author);
             return $this->redirectToRoute('home');
         }
 
@@ -71,34 +39,52 @@ class TrickController extends BaseController
     }
 
     /**
-     * @Route("/trick/{id}/{slug}", name="trick_show", methods={"GET"})
+     * @Route("/trick/{slug}/{id}", name="trick_show", methods={"GET"}, requirements={"id":"\d+"})
      */
-    /* public function show(Trick $trick): Response
+    public function show(Trick $trick): Response
     {
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
         ]);
-    } */
+    }
 
     /**
-     * @Route("/trick/{id}/edit", name="trick_edit", methods={"GET","POST"})
+     * @Route("/trick/{id}/edit", name="trick_edit", methods={"GET","POST"}, requirements={"id":"\d+"})
      */
-    /* public function edit(Request $request, Trick $trick): Response
+    public function edit(Request $request, Trick $trick, FileUploader $fileUploader): Response
     {
+        // TODO : change the user when the login is done
+        $author = $this->em->getRepository(User::class)->find(1);
+
+        $images = $this->em->getRepository(Image::class)->findBy(['trick' => $trick]);
+        foreach ($images as $image) {
+            $arrayPhotoNames[]=$image->getPath();
+            $trick->addImage($image);
+        }
+
+        // TODO for video =)
+        // in edit we need to send files to the formType cause the collection type are not mapped
+        /* $arrayPhotos = [];
+        $arrayPhotoNames = $trick->getPhotos();
+        foreach ($trick->getPhotos() as $key => $value) {
+            $arrayPhotos[$key] = new File($this->getParameter('trickUpload_directory') . "/" . $value);
+        }
+        $trick->setPhotos($arrayPhotos); */
+        
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('trick_index');
+            $this->persistValidForm($form, $fileUploader, $trick, $author);
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('trick/edit.html.twig', [
             'trick' => $trick,
             'form' => $form->createView(),
+            'arrayPhotosForPreview' => isset($arrayPhotoNames) ? json_encode($arrayPhotoNames) : ''
         ]);
-    } */
+    }
 
     /**
      * @Route("/trick/{id}", name="trick_delete", methods={"POST"})
@@ -113,4 +99,46 @@ class TrickController extends BaseController
 
         return $this->redirectToRoute('trick_index');
     } */
+
+    private function persistValidForm($form, $fileUploader, $trick, $author)
+    {
+
+        /** @var UploadedFile $mainImgFile */
+        $mainImgFile = $form->get('mainImg')->getData();
+
+        $videos = $form->get('videos')->getData();
+
+        if ($mainImgFile) {
+            $oldFile = null;
+            // delete the old img, WORKS, TODO : we need to uncomment after test in edit
+            /* if($trick->getMainImgName()){
+                $oldFile = new File($this->getParameter('trickUpload_directory') ."/". $trick->getMainImgName());
+            } */
+            $newFilename = $fileUploader->upload($mainImgFile, $this->getParameter('trickUpload_directory'), $oldFile);
+            $trick->setMainImgName($newFilename);
+        }
+
+        // TODO : delete old file in the machine
+        $images = $trick->getImages();
+        if ($images) {
+            foreach ($images as $image) {
+                $oldFile = null;
+                if($image->getFile() !== null){
+                    $newFilename = $fileUploader->upload($image->getFile(), $this->getParameter('trickUpload_directory'), $oldFile);
+                }
+                if($image->getFile() === null){
+                    $newFilename = $image->getPath();
+                }
+                $image->setPath($newFilename);
+                $image->setTrick($trick);
+            }
+        }
+
+        $trick->setAuthor($author);
+        $trick->setVideos($videos);
+        $trick->setCreatedAt();
+
+        $this->em->persist($trick);
+        $this->em->flush();
+    }
 }

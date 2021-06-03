@@ -29,34 +29,25 @@
 		{{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
 	</div>
 	<div>
-		<img id="trick_mainImg_img" src="">
+		<img id="trick_mainImg_img" src="{{ (trick.mainImgName) ? '/images/tricks/uploads/' ~ trick.mainImgName : '' }}">
 	</div>
 	{{ form_row(form.mainImg) }}
 
 	<div>
-		{{ form_label(form.photosFiles) }}
-		{{ form_errors(form.photosFiles) }}
-		<ul id="photo_field_list" data-prototype="{{ form_widget(form.photosFiles.vars.prototype)|e }}" data-ul-type="Photo" data-widget-counter="{{ form.photosFiles|length }}">
-			{% for photo in form.photosFiles %}
-				<li>
-					{{ form_errors(photo) }}
-					{{ form_widget(photo) }}
-				</li>
-			{% endfor %}
+		{# <ul
+			id="photo_field_list" data-prototype="{{ form_widget(form.photosFiles.vars.prototype)|e }}" data-ul-type="Photo" data-array-photos="{{ arrayPhotosForPreview is defined ? arrayPhotosForPreview : '' }}" data-widget-counter="{{ form.photosFiles|length }}">
+			{{ form_widget(form.photosFiles) }}
+		</ul> #}
+		<ul
+			id="photo_field_list" data-prototype="{{ form_widget(form.images.vars.prototype)|e }}" data-ul-type="Photo" data-array-photos="{{ arrayPhotosForPreview is defined ? arrayPhotosForPreview : '' }}" data-widget-counter="{{ form.images|length }}">
+			{{ form_widget(form.images) }}
 		</ul>
 		<button type="button" class="add-another-collection-widget btn btn-primary" data-list-selector="#photo_field_list">Ajouter une image</button>
 	</div>
-
 	<div>
-		{{ form_label(form.videos) }}
-		{{ form_errors(form.videos) }}
-		<ul id="video_field_list" data-prototype="{{ form_widget(form.videos.vars.prototype)|e }}"data-ul-type="Video" data-widget-counter="{{ form.videos|length }}">
-			{% for video in form.videos %}
-				<li>
-					{{ form_errors(video) }}
-					{{ form_widget(video) }}
-				</li>
-			{% endfor %}
+		<ul id="video_field_list" data-prototype="{{ form_widget(form.videos.vars.prototype)|e }}" data-ul-type="Video" data-widget-counter="{{ form.videos|length }}">
+			{# Javascript here #}
+			{{ form_widget(form.videos) }}
 		</ul>
 		<button type="button" class="add-another-collection-widget btn btn-primary" data-list-selector="#video_field_list">Ajouter une vidéo</button>
 	</div>

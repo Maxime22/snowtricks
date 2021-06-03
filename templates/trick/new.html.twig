@@ -12,3 +12,8 @@
 		<a href="{{ path('home') }}">Retour à la page d'accueil</a>
 	</div>
 {% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('form') }}
+{% endblock %}

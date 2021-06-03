@@ -14,5 +14,4 @@ import bsCustomFileInput from 'bs-custom-file-input';
 import './bootstrap';
 bsCustomFileInput.init();
 
-// Javascripts
-import './js/form.js';
+// Javascripts that we want approximately everywhere because app.js is loaded in the base.html
