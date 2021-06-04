@@ -6,11 +6,16 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity("email")
+ * @UniqueEntity("username")
  */
-class User
+class User implements UserInterface,\Serializable
 {
     /**
      * @ORM\Id
@@ -20,12 +25,13 @@ class User
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email
      */
     private $mail;
 
@@ -148,9 +154,13 @@ class User
         return $this;
     }
 
-    public function getRoles(): ?array
+    public function getRoles()
     {
-        return $this->roles;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
     public function setRoles(array $roles): self
@@ -158,6 +168,24 @@ class User
         $this->roles = $roles;
 
         return $this;
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function eraseCredentials()
+    { }
+
+    public function serialize()
+    {
+        return serialize([$this->id, $this->username, $this->password]);
+    }
+
+    public function unserialize($serialized)
+    {
+        list($this->id, $this->username, $this->password) = unserialize($serialized, ['allowed_classes' => false]);
     }
 
     public function getIsValidated(): ?bool

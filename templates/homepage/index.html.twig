@@ -8,5 +8,11 @@
     <div><a href="{{ path('trick_new') }}">Ajouter un article</a></div>
     <div><a href="{{ path('trick_edit',{id:18})}}">Editer le * article</a></div>
     <div><a href="{{ path('trick_show',{slug:"icimettrevraislug",id:18})}}">Voir le * article</a></div>
+    
     <a href="{{ asset('images/tricks/uploads/' ~ 'rurouni-kenshin-60b6429879fef.jpg') }}">View Image</a>
+    {% if app.user %}
+        <div><a href="{{ path('logout')}}">Se déconnecter</a></div>
+    {% else %}
+        <div><a href="{{ path('login')}}">Se connecter</a></div>
+    {% endif %}
 {% endblock %}
