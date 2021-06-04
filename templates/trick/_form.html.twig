@@ -55,3 +55,7 @@
 </div>
 
 {{ form_end(form) }}
+
+{% if trick.id %}
+	{{ include('trick/_delete_form.html.twig') }}
+{% endif %}

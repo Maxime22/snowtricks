@@ -63,15 +63,6 @@ class TrickController extends BaseController
             $trick->addImage($image);
         }
 
-        // TODO for video =)
-        // in edit we need to send files to the formType cause the collection type are not mapped
-        /* $arrayPhotos = [];
-        $arrayPhotoNames = $trick->getPhotos();
-        foreach ($trick->getPhotos() as $key => $value) {
-            $arrayPhotos[$key] = new File($this->getParameter('trickUpload_directory') . "/" . $value);
-        }
-        $trick->setPhotos($arrayPhotos); */
-
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 
@@ -90,16 +81,26 @@ class TrickController extends BaseController
     /**
      * @Route("/trick/{id}", name="trick_delete", methods={"POST"})
      */
-    /* public function delete(Request $request, Trick $trick): Response
+    public function delete(Request $request, Trick $trick): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$trick->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($trick);
-            $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->request->get('_token'))) {
+            // Delete all images linked to the trick
+            $images = $this->em->getRepository(Image::class)->findBy(['trick' => $trick]);
+            foreach ($images as $image) {
+                $fileToDelete = new File($this->getParameter('trickUpload_directory') . "/" . $image->getPath());
+                $this->deleteFile($fileToDelete);
+            }
+            if ($trick->getMainImgName()) {
+                $mainImgTodelete = new File($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
+                $this->deleteFile($mainImgTodelete);
+            }
+
+            $this->em->remove($trick);
+            $this->em->flush();
         }
 
-        return $this->redirectToRoute('trick_index');
-    } */
+        return $this->redirectToRoute('home');
+    }
 
     private function persistValidForm($form, $fileUploader, $trick, $author, $oldImages = null)
     {
@@ -142,9 +143,7 @@ class TrickController extends BaseController
             $imagesToDelete = array_diff($oldImages, $newImages);
             foreach ($imagesToDelete as $imageToDelete) {
                 $fileToDelete = new File($this->getParameter('trickUpload_directory') . "/" . $imageToDelete);
-                if (file_exists($fileToDelete->getPathname())) {
-                    unlink($fileToDelete);
-                }
+                $this->deleteFile($fileToDelete);
             }
         }
 
@@ -156,5 +155,12 @@ class TrickController extends BaseController
 
         $this->em->persist($trick);
         $this->em->flush();
+    }
+
+    private function deleteFile($fileToDelete)
+    {
+        if (file_exists($fileToDelete->getPathname())) {
+            unlink($fileToDelete);
+        }
     }
 }
