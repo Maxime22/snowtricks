@@ -35,7 +35,13 @@ $(function () {
         var arrayPhotos = list.data('array-photos')
 
         var container = list.children()
-        var customFiles = container.children('.form-group').children('div').clone()
+        if(ulType === "Photo"){
+            var customFiles = container.children('.form-group').children('div').clone()
+        }
+
+        if(ulType === "Video"){
+            var customFiles = container.children('.form-group').children('input').clone()
+        }
 
         customFiles.each(function( index ) {
             var newElem = $('<li id=liNumber'+index+ulType+'></li>')

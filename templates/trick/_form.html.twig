@@ -34,10 +34,6 @@
 	{{ form_row(form.mainImg) }}
 
 	<div>
-		{# <ul
-			id="photo_field_list" data-prototype="{{ form_widget(form.photosFiles.vars.prototype)|e }}" data-ul-type="Photo" data-array-photos="{{ arrayPhotosForPreview is defined ? arrayPhotosForPreview : '' }}" data-widget-counter="{{ form.photosFiles|length }}">
-			{{ form_widget(form.photosFiles) }}
-		</ul> #}
 		<ul
 			id="photo_field_list" data-prototype="{{ form_widget(form.images.vars.prototype)|e }}" data-ul-type="Photo" data-array-photos="{{ arrayPhotosForPreview is defined ? arrayPhotosForPreview : '' }}" data-widget-counter="{{ form.images|length }}">
 			{{ form_widget(form.images) }}

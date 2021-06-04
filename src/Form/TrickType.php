@@ -21,15 +21,9 @@ class TrickType extends AbstractType
         $entity = $builder->getData();
 
         $imgRequired = true;
-        $arrayPhotos = [];
 
         if ($entity->getId()) { // if there is an ID =, it means we are in an edit
             $imgRequired = false;
-        }
-        if (count($entity->getPhotos())>0) {
-            foreach ($entity->getPhotos() as $key => $value) {
-                $arrayPhotos[$key] = $value;
-            }
         }
 
         $builder
@@ -55,25 +49,11 @@ class TrickType extends AbstractType
                     ])
                 ],
             ])
-            // the mapped false should not have the same name as real entity attributes
-            /* ->add('photosFiles', CollectionType::class, [
-                'entry_type' => FileType::class,
-                'mapped' => false,
-                'label' => false,
-                'data' => $arrayPhotos,
-                'entry_options' => [
-                    'attr' => ['class' => 'tricks_photo_class'],
-                    'required' => false,
-                ],
-                'allow_add'=> true,
-                'allow_delete'=> true,
-                'prototype' => true,
-            ]) */
             ->add('videos', CollectionType::class, [
                 'entry_type' => TextType::class,
                 'label' => false,
                 'entry_options' => [
-                    'attr' => ['class' => 'tricks_video_class'],
+                    'attr' => ['class' => 'tricks_video_class', 'label' => false],
                 ],
                 'allow_add'=> true,
                 'allow_delete'=> true
@@ -83,8 +63,7 @@ class TrickType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true
             ])
-            /* 
-            ->add('videos')
+            /*
             ->add('author') */;
     }
 

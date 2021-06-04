@@ -64,11 +64,6 @@ class Trick
     /**
      * @ORM\Column(type="array", nullable=true)
      */
-    private $photos = [];
-
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     */
     private $videos = [];
 
     /**
@@ -172,23 +167,6 @@ class Trick
         $this->mainImgName = $mainImgName;
 
         return $this;
-    }
-
-    public function getPhotos(): ?array
-    {
-        return $this->photos;
-    }
-
-    public function setPhotos(?array $photos): self
-    {
-        $this->photos = $photos;
-
-        return $this;
-    }
-
-    public function addPhoto($photo)
-    {
-        $this->photos[] = $photo;
     }
 
     public function getVideos(): ?array

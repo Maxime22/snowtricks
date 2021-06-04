@@ -57,8 +57,9 @@ class TrickController extends BaseController
         $author = $this->em->getRepository(User::class)->find(1);
 
         $images = $this->em->getRepository(Image::class)->findBy(['trick' => $trick]);
+        $arrayPhotoNames = null;
         foreach ($images as $image) {
-            $arrayPhotoNames[]=$image->getPath();
+            $arrayPhotoNames[] = $image->getPath();
             $trick->addImage($image);
         }
 
@@ -70,12 +71,12 @@ class TrickController extends BaseController
             $arrayPhotos[$key] = new File($this->getParameter('trickUpload_directory') . "/" . $value);
         }
         $trick->setPhotos($arrayPhotos); */
-        
+
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->persistValidForm($form, $fileUploader, $trick, $author);
+            $this->persistValidForm($form, $fileUploader, $trick, $author, $arrayPhotoNames);
             return $this->redirectToRoute('home');
         }
 
@@ -100,7 +101,7 @@ class TrickController extends BaseController
         return $this->redirectToRoute('trick_index');
     } */
 
-    private function persistValidForm($form, $fileUploader, $trick, $author)
+    private function persistValidForm($form, $fileUploader, $trick, $author, $oldImages = null)
     {
 
         /** @var UploadedFile $mainImgFile */
@@ -111,28 +112,43 @@ class TrickController extends BaseController
         if ($mainImgFile) {
             $oldFile = null;
             // delete the old img, WORKS, TODO : we need to uncomment after test in edit
-            /* if($trick->getMainImgName()){
-                $oldFile = new File($this->getParameter('trickUpload_directory') ."/". $trick->getMainImgName());
-            } */
+            if ($trick->getMainImgName()) {
+                $oldFile = new File($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
+            }
             $newFilename = $fileUploader->upload($mainImgFile, $this->getParameter('trickUpload_directory'), $oldFile);
             $trick->setMainImgName($newFilename);
         }
 
-        // TODO : delete old file in the machine
+        // update images
         $images = $trick->getImages();
+        $newImages = [];
         if ($images) {
             foreach ($images as $image) {
-                $oldFile = null;
-                if($image->getFile() !== null){
-                    $newFilename = $fileUploader->upload($image->getFile(), $this->getParameter('trickUpload_directory'), $oldFile);
+                if ($image->getFile() !== null) {
+                    $newFilename = $fileUploader->upload($image->getFile(), $this->getParameter('trickUpload_directory'));
+                    $newImages[] = $newFilename;
                 }
-                if($image->getFile() === null){
+                if ($image->getFile() === null) {
                     $newFilename = $image->getPath();
+                    $newImages[] = $newFilename;
                 }
                 $image->setPath($newFilename);
                 $image->setTrick($trick);
             }
         }
+
+        // Delete image files
+        if ($oldImages) {
+            $imagesToDelete = array_diff($oldImages, $newImages);
+            foreach ($imagesToDelete as $imageToDelete) {
+                $fileToDelete = new File($this->getParameter('trickUpload_directory') . "/" . $imageToDelete);
+                if (file_exists($fileToDelete->getPathname())) {
+                    unlink($fileToDelete);
+                }
+            }
+        }
+
+        // TODO videos
 
         $trick->setAuthor($author);
         $trick->setVideos($videos);
