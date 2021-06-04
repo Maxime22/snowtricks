@@ -9,9 +9,15 @@
 			<div class="col-12">
 				<div class="m-auto text-center">
 					<h1>{{"login"|trans}}</h1>
-                    {% if error %}
-                        <div class="alert alert-danger">{{ error.messageKey | trans(error.messagedata, 'security') }}</div>
-                    {% endif %}
+					{% for message in app.flashes('notice') %}
+						<div class="alert alert-success">{{ message }}</div>
+					{% endfor %}
+					{% for message in app.flashes('danger') %}
+						<div class="alert alert-danger">{{ message }}</div>
+					{% endfor %}
+					{% if error %}
+						<div class="alert alert-danger">{{ error.messageKey | trans(error.messagedata, 'security') }}</div>
+					{% endif %}
 					<form action="{{ path('login') }}" method="post">
 						<div class="form-group">
 							<input class="form-control" placeholder="{{"username"|trans}}" id="username" name="_username" type="text" value="{{ lastUsername }}"/>
@@ -19,16 +25,16 @@
 						<div class="form-group">
 							<input class="form-control" placeholder="{{"password"|trans}}" id="password" name="_password" type="password"/>
 						</div>
-						{# <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"> #}
+						{# TODO <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"> #}
 
 						<button class="btn btn-success" type="submit">{{"login"|trans}}</button>
 					</form>
-					{# <div>
-											<a href="{{ path('subscription') }}">{{"login.notSubcribedYet?"|trans}}</a>
-										</div> #}
+					<div>
+						<a href="{{ path('subscription') }}">{{"login.notSubcribedYet?"|trans}}</a>
+					</div>
 					{# <div>
 											<a href="{{ path('forgotten_password') }}">{{"password.forgotten?"|trans}}</a>
-										</div> #}
+										   </div> #}
 				</div>
 			</div>
 		</div>

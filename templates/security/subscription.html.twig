@@ -1,0 +1,47 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	{{"subscription"|trans}}
+{% endblock %}
+{% block body %}
+	{{ form_start(form) }}
+	<div class="container">
+		<div class="row">
+			<div class="col-12 text-center">
+				<h1>{{"subscription"|trans}}</h1>
+				{% for message in app.flashes('danger') %}
+					<div class="alert alert-danger">{{ message }}</div>
+				{% endfor %}
+				<div class="row">
+					<div class="col-md-12 text-center form-group">
+						<div>
+							{{ form_label(form.username) }}
+						</div>
+						{{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+					</div>
+					<div class="col-md-12 text-center form-group">
+						<div>
+							{{ form_label(form.mail) }}
+						</div>
+						{{ form_widget(form.mail, {'attr': {'class': 'form-control'}}) }}
+					</div>
+					<div class="col-md-12 text-center form-group">
+						<div>
+							{{ form_label(form.password.first) }}
+						</div>
+						{{ form_widget(form.password.first) }}
+						<div>
+							{{ form_label(form.password.second) }}
+						</div>
+						{{ form_widget(form.password.second) }}
+					</div>
+				</div>
+				{{ form_widget(form) }}
+				<div class="text-center">
+					<button class="btn btn-primary">{{"subscribe"|trans}}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{{ form_end(form) }}{% endblock %}
