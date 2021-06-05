@@ -112,7 +112,6 @@ class TrickController extends BaseController
 
         if ($mainImgFile) {
             $oldFile = null;
-            // delete the old img, WORKS, TODO : we need to uncomment after test in edit
             if ($trick->getMainImgName()) {
                 $oldFile = new File($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
             }
@@ -146,8 +145,6 @@ class TrickController extends BaseController
                 $this->deleteFile($fileToDelete);
             }
         }
-
-        // TODO videos
 
         $trick->setAuthor($author);
         $trick->setVideos($videos);
