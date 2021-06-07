@@ -26,6 +26,7 @@
 							<input class="form-control" placeholder="{{"password"|trans}}" id="password" name="_password" type="password"/>
 						</div>
 						<button class="btn btn-success" type="submit">{{"login"|trans}}</button>
+						<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 					</form>
 					<div>
 						<a href="{{ path('subscription') }}">{{"login.notSubcribedYet?"|trans}}</a>

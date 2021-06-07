@@ -13,11 +13,13 @@ security:
             anonymous: true
             lazy: true
 
-            form_login:
-                check_path: login
             logout:
                 path: /logout
                 target: /
+        
+            form_login:
+                check_path: login
+                csrf_token_generator: security.csrf.token_manager
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
