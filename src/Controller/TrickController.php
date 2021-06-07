@@ -5,9 +5,10 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Image;
 use App\Entity\Trick;
+use App\Entity\Comment;
 use App\Form\TrickType;
+use App\Form\CommentType;
 use App\Service\FileUploader;
-use App\Repository\TrickRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
@@ -24,7 +25,7 @@ class TrickController extends BaseController
         $trick = new Trick();
 
         // TODO : change the user when the login is done
-        $author = $this->em->getRepository(User::class)->find(1);
+        $author = $this->em->getRepository(User::class)->find($this->security->getUser());
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -39,12 +40,29 @@ class TrickController extends BaseController
     }
 
     /**
-     * @Route("/trick/{slug}/{id}", name="trick_show", methods={"GET"}, requirements={"id":"\d+"})
+     * @Route("/trick/{slug}/{id}", name="trick_show", methods={"GET","POST"}, requirements={"id":"\d+","slug":"[a-z0-9\-]*"})
      */
-    public function show(Trick $trick): Response
+    public function show(Trick $trick, Request $request): Response
     {
+        $comments = $this->em->getRepository(Comment::class)->findBy(['trick'=>$trick]);
+
+        $newComment = new Comment();
+        $formComment = $this->createForm(CommentType::class, $newComment);
+        $formComment->handleRequest($request);
+        if ($formComment->isSubmitted() && $formComment->isValid()) {
+            $newComment->setAuthor($this->security->getUser());
+            $newComment->setCreatedAt();
+            $newComment->setTrick($trick);
+            $this->em->persist($newComment);
+            $this->em->flush();
+            // TODO change lala
+            return $this->redirectToRoute('trick_show',['id'=>$trick->getId(),'slug'=>$trick->getSlug()]);
+        }
+
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
+            'formComment' => $formComment->createView(),
+            'comments' => $comments 
         ]);
     }
 
@@ -53,9 +71,6 @@ class TrickController extends BaseController
      */
     public function edit(Request $request, Trick $trick, FileUploader $fileUploader): Response
     {
-        // TODO : change the user when the login is done
-        $author = $this->em->getRepository(User::class)->find(1);
-
         $images = $this->em->getRepository(Image::class)->findBy(['trick' => $trick]);
         $arrayPhotoNames = null;
         foreach ($images as $image) {
@@ -67,7 +82,7 @@ class TrickController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->persistValidForm($form, $fileUploader, $trick, $author, $arrayPhotoNames);
+            $this->persistValidForm($form, $fileUploader, $trick, null, $arrayPhotoNames);
             return $this->redirectToRoute('home');
         }
 
@@ -102,7 +117,7 @@ class TrickController extends BaseController
         return $this->redirectToRoute('home');
     }
 
-    private function persistValidForm($form, $fileUploader, $trick, $author, $oldImages = null)
+    private function persistValidForm($form, $fileUploader, $trick, $author = null, $oldImages = null)
     {
 
         /** @var UploadedFile $mainImgFile */
@@ -146,7 +161,10 @@ class TrickController extends BaseController
             }
         }
 
-        $trick->setAuthor($author);
+        // author is null in the edit
+        if ($author) {
+            $trick->setAuthor($author);
+        }
         $trick->setVideos($videos);
         $trick->setCreatedAt();
 

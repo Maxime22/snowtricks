@@ -1,0 +1,29 @@
+{{ form_start(formComment) }}
+
+<div class="row">
+	<div class="col-md-12 form-group">
+		<div>
+			{{ form_label(formComment.title) }}
+		</div>
+		<div class="form_error">
+			{{ form_errors(formComment.title) }}
+		</div>
+		{{ form_widget(formComment.title, {'attr': {'class': 'form-control'}}) }}
+	</div>
+	<div class="col-md-12 form-group">
+		<div>
+			{{ form_label(formComment.content) }}
+		</div>
+		<div class="form_error">
+			{{ form_errors(formComment.content) }}
+		</div>
+		{{ form_widget(formComment.content, {'attr': {'class': 'form-control'}}) }}
+	</div>
+</div>
+{{ form_widget(formComment) }}
+
+<div class="text-center">
+	<button id="submit_button" class="btn btn-primary">Commenter</button>
+</div>
+
+{{ form_end(formComment) }}

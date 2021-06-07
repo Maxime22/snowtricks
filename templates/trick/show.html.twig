@@ -1,52 +1,58 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Trick{% endblock %}
+{% block title %}Trick
+{% endblock %}
 
 {% block body %}
-    <h1>Trick</h1>
+	<h1>Trick</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ trick.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ trick.title }}</td>
-            </tr>
-            <tr>
-                <th>TrickGroup</th>
-                <td>{{ trick.trickGroup }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ trick.content }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ trick.createdAt ? trick.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ trick.updatedAt ? trick.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>MainImg</th>
-                <td><img src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}"></td>
-            </tr>
-            <tr>
-                <th>Photos</th>
-                <td>{{ trick.photos ? trick.photos|join(', ') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Videos</th>
-                <td>{{ trick.videos ? trick.videos|join(', ') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>Id</th>
+				<td>{{ trick.id }}</td>
+			</tr>
+			<tr>
+				<th>Title</th>
+				<td>{{ trick.title }}</td>
+			</tr>
+			<tr>
+				<th>TrickGroup</th>
+				<td>{{ trick.trickGroup }}</td>
+			</tr>
+			<tr>
+				<th>Content</th>
+				<td>{{ trick.content }}</td>
+			</tr>
+			<tr>
+				<th>CreatedAt</th>
+				<td>{{ trick.createdAt ? trick.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+			</tr>
+			<tr>
+				<th>UpdatedAt</th>
+				<td>{{ trick.updatedAt ? trick.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+			</tr>
+			<tr>
+				<th>MainImg</th>
+				<td><img src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}"></td>
+			</tr>
+			<tr>
+				<th>Videos</th>
+				<td>{{ trick.videos ? trick.videos|join(', ') : '' }}</td>
+			</tr>
+		</tbody>
+	</table>
 
-    {# <a href="{{ path('trick_edit', {'id': trick.id}) }}">edit</a> #}
+	{% if app.user %}
+		{{ include('comment/_form.html.twig') }}
+	{% endif %}
 
-    {#{{ include('trick/_delete_form.html.twig') }}#}
+	{% if comments %}
+		{% for comment in comments %}
+			<div class="mb-3">
+				<div>{{ comment.title }}</div>
+				<div>{{ comment.content }}</div>
+			</div>
+		{% endfor %}
+	{% endif %}
 {% endblock %}
