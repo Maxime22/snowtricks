@@ -1,18 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomepageController!{% endblock %}
+{% block title %}Hello HomepageController!
+{% endblock %}
 
 {% block body %}
-    <img class="homeBigImg" src="/images/home/snowboard.jpg" alt="Image de couverture Snowboard" />
-    <h1>Hello Maxou</h1>
-    <div><a href="{{ path('trick_new') }}">Ajouter un article</a></div>
-    <div><a href="{{ path('trick_edit',{id:18})}}">Editer le * article</a></div>
-    <div><a href="{{ path('trick_show',{slug:"icimettrevraislug",id:19})}}">Voir le * article</a></div>
-    
-    <a href="{{ asset('images/tricks/uploads/' ~ 'rurouni-kenshin-60b6429879fef.jpg') }}">View Image</a>
-    {% if app.user %}
-        <div><a href="{{ path('logout')}}">Se déconnecter</a></div>
-    {% else %}
-        <div><a href="{{ path('login')}}">Se connecter</a></div>
-    {% endif %}
+	<img class="homeBigImg" src="/images/home/snowboard.jpg" alt="Image de couverture Snowboard"/>
+	<div class="container">
+		<h1>Hello Maxou</h1>
+		<div>
+			<a href="{{ path('trick_new') }}">Ajouter un article</a>
+		</div>
+		<div>
+			<a href="{{ path('trick_edit',{id:18})}}">Editer le * article</a>
+		</div>
+
+		<a href="{{ asset('images/tricks/uploads/' ~ 'rurouni-kenshin-60b6429879fef.jpg') }}">View Image</a>
+
+		<div class="row trickContainer">
+			{% for trick in tricks %}
+				<div class="col-md-4 mt-3">
+					<img class="trickHomeImg" src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}" alt={{ "snowboard figure " ~ trick.id }}>
+					<h3>{{ trick.title }}</h3>
+					<a href="{{ path('trick_show',{slug:trick.slug,id:trick.id})}}">Voir la figure</a>
+				</div>
+			{% endfor %}
+		</div>
+		<button id="getMoreTricks" class="btn btn-primary">Afficher plus de figures</button>
+
+		{% if app.user %}
+			<div>
+				<a href="{{ path('logout')}}">Se déconnecter</a>
+			</div>
+		{% else %}
+			<div>
+				<a href="{{ path('login')}}">Se connecter</a>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('home') }}
 {% endblock %}

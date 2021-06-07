@@ -55,7 +55,6 @@ class TrickController extends BaseController
             $newComment->setTrick($trick);
             $this->em->persist($newComment);
             $this->em->flush();
-            // TODO change lala
             return $this->redirectToRoute('trick_show',['id'=>$trick->getId(),'slug'=>$trick->getSlug()]);
         }
 
@@ -132,6 +131,8 @@ class TrickController extends BaseController
             }
             $newFilename = $fileUploader->upload($mainImgFile, $this->getParameter('trickUpload_directory'), $oldFile);
             $trick->setMainImgName($newFilename);
+        }else if (!$trick->getMainImgName()){
+            $trick->setMainImgName('snowboard_main.jpeg');
         }
 
         // update images

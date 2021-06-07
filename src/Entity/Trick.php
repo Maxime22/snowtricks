@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
@@ -25,12 +26,14 @@ class Trick
 
     /**
      * @ORM\Id
+     * @Groups("trick")
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
+     * @Groups("trick")
      * @ORM\Column(type="string", length=255)
      */
     private $title;
@@ -61,6 +64,7 @@ class Trick
     private $updatedAt;
 
     /**
+     * @Groups("trick")
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $mainImgName;
@@ -81,6 +85,7 @@ class Trick
     private $images;
 
     /**
+     * @Groups("trick")
      * @ORM\Column(type="string", length=255, unique=true)
      */
     private $slug;

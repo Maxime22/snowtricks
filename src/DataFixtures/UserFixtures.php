@@ -9,6 +9,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture
 {
+    public const DEMO_USER_REFERENCE = 'demo-user';
+
     public function __construct(UserPasswordEncoderInterface $encoder)
     {
         $this->encoder = $encoder;
@@ -24,5 +26,8 @@ class UserFixtures extends Fixture
         $user->setPassword($this->encoder->encodePassword($user,'demo'));
         $manager->persist($user);
         $manager->flush();
+
+        // other fixtures can get this object using the UserFixtures::ADMIN_USER_REFERENCE constant
+        $this->addReference(self::DEMO_USER_REFERENCE, $user);
     }
 }
