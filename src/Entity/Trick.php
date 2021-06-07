@@ -6,20 +6,34 @@ use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
+ * @UniqueEntity("slug")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Trick
 {
+    const GROUPS = [
+        'Grab' => 'grab',
+        'Rotation' => 'rotation',
+        'Flip' => 'flip',
+        'Slide' => 'slide'
+    ];
+
     /**
      * @ORM\Id
+     * @Groups("trick")
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
+     * @Groups("trick")
      * @ORM\Column(type="string", length=255)
      */
     private $title;
@@ -50,14 +64,10 @@ class Trick
     private $updatedAt;
 
     /**
+     * @Groups("trick")
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $mainImg;
-
-    /**
-     * @ORM\Column(type="array", nullable=true)
-     */
-    private $photos = [];
+    private $mainImgName;
 
     /**
      * @ORM\Column(type="array", nullable=true)
@@ -69,9 +79,21 @@ class Trick
      */
     private $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="trick", orphanRemoval=true, cascade={"persist", "remove"})
+     */
+    private $images;
+
+    /**
+     * @Groups("trick")
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    private $slug;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,10 +154,9 @@ class Trick
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $createdAt;
-
+        $this->createdAt = new \DateTime();
         return $this;
     }
 
@@ -144,33 +165,20 @@ class Trick
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $updatedAt;
-
+        $this->updatedAt = new \DateTime();
         return $this;
     }
 
-    public function getMainImg(): ?string
+    public function getMainImgName(): ?string
     {
-        return $this->mainImg;
+        return $this->mainImgName;
     }
 
-    public function setMainImg(?string $mainImg): self
+    public function setMainImgName(?string $mainImgName): self
     {
-        $this->mainImg = $mainImg;
-
-        return $this;
-    }
-
-    public function getPhotos(): ?array
-    {
-        return $this->photos;
-    }
-
-    public function setPhotos(?array $photos): self
-    {
-        $this->photos = $photos;
+        $this->mainImgName = $mainImgName;
 
         return $this;
     }
@@ -215,5 +223,55 @@ class Trick
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Image[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->contains($image)) {
+            $this->images->removeElement($image);
+            // set the owning side to null (unless already changed)
+            if ($image->getTrick() === $this) {
+                $image->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function computeSlug(SluggerInterface $slugger)
+    {
+        if (!$this->slug || '-' === $this->slug) {
+            $this->slug = (string) $slugger->slug((string) $this->title)->lower();
+        }
     }
 }

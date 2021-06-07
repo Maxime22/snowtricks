@@ -83,10 +83,9 @@ class Comment
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $createdAt;
-
+        $this->createdAt = new \DateTime();
         return $this;
     }
 
@@ -95,10 +94,9 @@ class Comment
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $updatedAt;
-
+        $this->updatedAt = new \DateTime();
         return $this;
     }
 

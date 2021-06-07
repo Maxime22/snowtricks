@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Trick{% endblock %}
+
+{% block body %}
+    <h1>Edit Trick</h1>
+
+    {{ include('trick/_form.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('form') }}
+{% endblock %}

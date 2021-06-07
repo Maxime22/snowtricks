@@ -1,0 +1,24 @@
+/* HOME */
+.homeBigImg{
+    object-fit: cover;
+    width:100%;
+    height: 100vh;
+}
+
+.trickHomeImg{
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.form_error{
+
+}
+
+/* FORMS */
+
+label.custom-file-label{
+    display: none !important;
+}
+
+@import '~bootstrap/scss/bootstrap';
