@@ -31,7 +31,7 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
     
-    encoders:
+    password_hashers:
         App\Entity\User:
             algorithm: auto
             cost: 12
