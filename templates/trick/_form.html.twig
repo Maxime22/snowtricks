@@ -57,5 +57,7 @@
 {{ form_end(form) }}
 
 {% if trick.id %}
-	{{ include('trick/_delete_form.html.twig') }}
+	{% if is_granted("trick_delete" , trick) %}
+		{{ include('trick/_delete_form.html.twig') }}
+	{% endif %}
 {% endif %}

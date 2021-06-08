@@ -99,6 +99,9 @@ class TrickController extends AbstractController
      */
     public function delete(Request $request, Trick $trick, ImageRepository $imageRepository): Response
     {
+        // check delete voter
+        $this->denyAccessUnlessGranted('trick_delete', $trick);
+
         if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();
             // Delete all images linked to the trick
