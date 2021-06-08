@@ -46,13 +46,23 @@
 	{% if app.user %}
 		{{ include('comment/_form.html.twig') }}
 	{% endif %}
-
-	{% if comments %}
-		{% for comment in comments %}
-			<div class="mb-3">
-				<div>{{ comment.title }}</div>
-				<div>{{ comment.content }}</div>
-			</div>
-		{% endfor %}
+	<div class="row commentsContainer">
+		{% if comments %}
+			{% for comment in comments|slice(0, 5) %}
+				<div class="col-md-12 mt-3">
+					<img class="commentAuthorPhoto" src="{{ asset('images/users/uploads/' ~ comment.author.photo) }}" alt={{ "Photo de l'auteur " ~ comment.id }}>
+					<div>{{ comment.title }}</div>
+					<div>{{ comment.content }}</div>
+				</div>
+			{% endfor %}
+		{% endif %}
+	</div>
+	{% if comments|length > 5 %}
+	<button id="getMoreComments" class="btn btn-primary">Afficher plus de commentaires</button>
 	{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('trickShow') }}
 {% endblock %}

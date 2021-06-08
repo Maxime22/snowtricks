@@ -188,4 +188,22 @@ class TrickController extends AbstractController
             unlink($fileToDelete);
         }
     }
+
+    /**
+     * @Route("/getMoreComments", name="getMoreComments", methods={"POST"})
+     */
+    public function getMoreComments(Request $request, CommentRepository $commentRepository)
+    {
+        $offset = $request->request->get('offset');
+        $newComments = $commentRepository->findBy([], null, 5, $offset);
+
+        return $this->json(
+            [
+                'newComments' => $newComments
+            ],
+            200,
+            [],
+            ['groups' => 'comment']
+        );
+    }
 }

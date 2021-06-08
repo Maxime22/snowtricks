@@ -23,6 +23,15 @@
     border: 1px #ebcccc solid;
 }
 
+/* COMMENTS */
+
+.commentAuthorPhoto{
+    height:100px;
+    width:100px;
+    object-fit: cover;
+    border-radius: 400px;
+}
+
 label.custom-file-label{
     display: none !important;
 }

@@ -56,7 +56,7 @@ class TrickType extends AbstractType
                 'entry_options' => [
                     'attr' => ['class' => 'tricks_video_class'],
                     'label' => false,
-                    'constraints' => [new Regex(['pattern'=> '/https:\/\/www.youtube.com\/embed\//','message'=>"Votre lien doit être un lien Youtube de la forme : https://www.youtube.com/embed/..."])]
+                    'constraints' => [new Regex(['pattern'=> '/https:\/\/www.youtube.com\/embed\//','message'=>"Votre lien doit être de la forme : https://www.youtube.com/embed/..."])]
                 ],
                 'allow_add'=> true,
                 'allow_delete'=> true
