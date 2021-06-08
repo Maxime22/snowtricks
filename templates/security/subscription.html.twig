@@ -17,21 +17,36 @@
 						<div>
 							{{ form_label(form.username) }}
 						</div>
+						<div>
+							{{ form_errors(form.username) }}
+						</div>
 						{{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
 					</div>
 					<div class="col-md-12 text-center form-group">
 						<div>
 							{{ form_label(form.mail) }}
 						</div>
+						<div>
+							{{ form_errors(form.mail) }}
+						</div>
 						{{ form_widget(form.mail, {'attr': {'class': 'form-control'}}) }}
 					</div>
 					<div class="col-md-12 text-center form-group">
 						<div>
+							{{ form_errors(form.password) }}
+						</div>
+						<div>
 							{{ form_label(form.password.first) }}
+						</div>
+						<div>
+							{{ form_errors(form.password.first) }}
 						</div>
 						{{ form_widget(form.password.first) }}
 						<div>
 							{{ form_label(form.password.second) }}
+						</div>
+						<div>
+							{{ form_errors(form.password.second) }}
 						</div>
 						{{ form_widget(form.password.second) }}
 					</div>

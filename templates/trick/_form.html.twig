@@ -5,7 +5,7 @@
 		<div>
 			{{ form_label(form.title) }}
 		</div>
-		<div class="form_error">
+		<div>
 			{{ form_errors(form.title) }}
 		</div>
 		{{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
@@ -14,7 +14,7 @@
 		<div>
 			{{ form_label(form.trickGroup) }}
 		</div>
-		<div class="form_error">
+		<div>
 			{{ form_errors(form.trickGroup) }}
 		</div>
 		{{ form_widget(form.trickGroup, {'attr': {'class': 'form-select'}}) }}
@@ -34,17 +34,18 @@
 	{{ form_row(form.mainImg) }}
 
 	<div>
-		<ul
+		<div
 			id="photo_field_list" data-prototype="{{ form_widget(form.images.vars.prototype)|e }}" data-ul-type="Photo" data-array-photos="{{ arrayPhotosForPreview is defined ? arrayPhotosForPreview : '' }}" data-widget-counter="{{ form.images|length }}">
 			{{ form_widget(form.images) }}
-		</ul>
+		</div>
 		<button type="button" class="add-another-collection-widget btn btn-primary" data-list-selector="#photo_field_list">Ajouter une image</button>
 	</div>
 	<div>
-		<ul id="video_field_list" data-prototype="{{ form_widget(form.videos.vars.prototype)|e }}" data-ul-type="Video" data-widget-counter="{{ form.videos|length }}">
+		{{ form_errors(form.videos) }}
+		<div id="video_field_list" data-prototype="{{ form_widget(form.videos.vars.prototype)|e }}" data-ul-type="Video" data-widget-counter="{{ form.videos|length }}">
 			{# Javascript here #}
 			{{ form_widget(form.videos) }}
-		</ul>
+		</div>
 		<button type="button" class="add-another-collection-widget btn btn-primary" data-list-selector="#video_field_list">Ajouter une vidéo</button>
 	</div>
 </div>

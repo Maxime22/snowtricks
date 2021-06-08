@@ -46,7 +46,7 @@ class TrickController extends AbstractController
     public function show(Trick $trick, Request $request, CommentRepository $commentRepository): Response
     {
         $em = $this->getDoctrine()->getManager();
-        $comments = $commentRepository->findBy(['trick'=>$trick]);
+        $comments = $commentRepository->findBy(['trick' => $trick]);
 
         $newComment = new Comment();
         $formComment = $this->createForm(CommentType::class, $newComment);
@@ -57,13 +57,13 @@ class TrickController extends AbstractController
             $newComment->setTrick($trick);
             $em->persist($newComment);
             $em->flush();
-            return $this->redirectToRoute('trick_show',['id'=>$trick->getId(),'slug'=>$trick->getSlug()]);
+            return $this->redirectToRoute('trick_show', ['id' => $trick->getId(), 'slug' => $trick->getSlug()]);
         }
 
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
             'formComment' => $formComment->createView(),
-            'comments' => $comments 
+            'comments' => $comments
         ]);
     }
 
@@ -73,6 +73,7 @@ class TrickController extends AbstractController
     public function edit(Request $request, Trick $trick, FileUploader $fileUploader, ImageRepository $imageRepository): Response
     {
         $images = $imageRepository->findBy(['trick' => $trick]);
+
         $arrayPhotoNames = null;
         foreach ($images as $image) {
             $arrayPhotoNames[] = $image->getPath();
@@ -95,7 +96,7 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/trick/{id}", name="trick_delete", methods={"POST"})
+     * @Route("/trick/{id}/delete", name="trick_delete", requirements={"id":"\d+"})
      */
     public function delete(Request $request, Trick $trick, ImageRepository $imageRepository): Response
     {
@@ -137,7 +138,7 @@ class TrickController extends AbstractController
             }
             $newFilename = $fileUploader->upload($mainImgFile, $this->getParameter('trickUpload_directory'), $oldFile);
             $trick->setMainImgName($newFilename);
-        }else if (!$trick->getMainImgName()){
+        } else if (!$trick->getMainImgName()) {
             $trick->setMainImgName('snowboard_main.jpeg');
         }
 
@@ -146,16 +147,18 @@ class TrickController extends AbstractController
         $newImages = [];
         if ($images) {
             foreach ($images as $image) {
-                if ($image->getFile() !== null) {
-                    $newFilename = $fileUploader->upload($image->getFile(), $this->getParameter('trickUpload_directory'));
-                    $newImages[] = $newFilename;
+                if ($image->getFile() || $image->getPath()) {
+                    if ($image->getFile() !== null) {
+                        $newFilename = $fileUploader->upload($image->getFile(), $this->getParameter('trickUpload_directory'));
+                        $newImages[] = $newFilename;
+                    }
+                    if ($image->getFile() === null) {
+                        $newFilename = $image->getPath();
+                        $newImages[] = $newFilename;
+                    }
+                    $image->setPath($newFilename);
+                    $image->setTrick($trick);
                 }
-                if ($image->getFile() === null) {
-                    $newFilename = $image->getPath();
-                    $newImages[] = $newFilename;
-                }
-                $image->setPath($newFilename);
-                $image->setTrick($trick);
             }
         }
 

@@ -40,40 +40,54 @@ $(function () {
     function fillList(list, ulType){
         // for preview
         var arrayPhotos = list.data('array-photos')
+        var customFiles = null
 
         var container = list.children()
-        if(ulType === "Photo"){
-            var customFiles = container.children('.form-group').children('div').clone()
+        if(ulType === "Photo" && arrayPhotos){
+            customFiles = container.children('.mb-3').children('div').clone()
         }
 
         if(ulType === "Video"){
-            var customFiles = container.children('.form-group').children('input').clone()
+            var customVideos = container.children().children('input')
         }
 
-        customFiles.each(function( index ) {
-            var newElem = $('<li id=liNumber'+index+ulType+'></li>')
-            // each this is a div with the class custom-file
-            newElem.append($(this))
-            var deleteButton = '<button type="button" class="delete'+ulType+' btn btn-danger mt-2" data-selector="'+ index + ulType +'" >Delete</button>'
-            
-            // for preview
-            if(ulType === "Photo"){
-                var newImg = $('<img id="trick_img_'+index+ulType+'" src="/images/tricks/uploads/'+arrayPhotos[index]+'"></img>')
-                newElem.append(newImg);
-            }
+        if (customFiles){
+            customFiles.each(function( index ) {
+                var newElem = $('<div id=elementNumber'+index+ulType+'></div>')
+                // each this is a div with the class custom-file
+                newElem.append($(this))
+                var deleteButton = '<button type="button" class="delete'+ulType+' btn btn-danger mt-2" data-selector="'+ index + ulType +'" >Delete</button>'
+                
+                // for preview
+                if(ulType === "Photo"){
+                    var newImg = $('<img id="trick_img_'+index+ulType+'" src="/images/tricks/uploads/'+arrayPhotos[index]+'"></img>')
+                    newElem.append(newImg);
+                }
 
-            newElem.append(deleteButton);
-            newElem.appendTo(container);
+                newElem.append(deleteButton);
+                newElem.appendTo(container);
+                
+                // for preview, we need to create addEventListener after we create the element in the DOM
+                if(ulType === "Photo"){
+                    console.log($(this).children('.mb-3'));
+                    $(this).children('.mb-3').children('input').on('change',function(){
+                        readURL(this,'trick_img_'+index+ulType);
+                    });
+                }
+            });
+        }
 
-            // for preview, we need to create addEventListener after we create the element in the DOM
-            if(ulType === "Photo"){
-                $(this).children('.form-group').children('.custom-file').children('input').on('change',function(){
-                    readURL(this,'trick_img_'+index+ulType);
-                });
-            }
-          });
-          
-        container.children('.form-group').remove();
+        if(customVideos){
+            customVideos.each(function( index ) {
+                $(this).parent().attr( "id", "elementNumber"+index+ulType );
+                var deleteButton = '<button type="button" class="delete'+ulType+' btn btn-danger mt-2" data-selector="'+ index + ulType +'" >Delete</button>'
+                $(this).after(deleteButton);
+            })
+        }
+        
+        if(ulType === "Photo"){
+            container.children('.mb-3').remove();
+        }
     }
 
     // add
@@ -92,7 +106,7 @@ $(function () {
         newWidget = newWidget.replace(/__name__/g, counter);
         
         // create a new list element and add it to the list
-        var newElem = $('<li id=liNumber'+counter+ulType+'></li>').html(newWidget);
+        var newElem = $('<div id=elementNumber'+counter+ulType+'></div>').html(newWidget);
 
         // for preview
         if(ulType === "Photo"){
@@ -107,31 +121,32 @@ $(function () {
         // we push the element to the DOM
         newElem.appendTo(container);
 
-        // for preview, needs to be after we create the element in the DOM
-        if(ulType === "Photo"){
-            var previewCounter = list.data('widget-counter');
-            document.querySelector('#trick_images_'+previewCounter+' .form-group .custom-file input').addEventListener('change',function(){
-                readURL(this,'trick_img_'+previewCounter+ulType);
-            });
-        }
-
         // Increase the counter
         counter++;
 
         // And store it, the length cannot be used if deleting widgets is allowed
         list.data('widget-counter', counter);
+
+        // for preview, needs to be after we create the element in the DOM
+        if(ulType === "Photo"){
+            var previewCounter = counter - 1;
+            console.log('#trick_images_'+previewCounter+' .mb-3 input')
+            document.querySelector('#trick_images_'+previewCounter+' .mb-3 input').addEventListener('change',function(){
+                readURL(this,'trick_img_'+previewCounter+ulType);
+            });
+        }
     });
 
     // DELETE
     $('#photo_field_list').on("click", "button.deletePhoto", function(){
         var selector = $(this).data('selector');
-        var elementToDelete = "li#liNumber"+selector
+        var elementToDelete = "div#elementNumber"+selector
         $(elementToDelete).remove();
     });
 
     $('#video_field_list').on("click", "button.deleteVideo", function(){
         var selector = $(this).data('selector');
-        var elementToDelete = "li#liNumber"+selector
+        var elementToDelete = "div#elementNumber"+selector
         $(elementToDelete).remove();
     });
 });

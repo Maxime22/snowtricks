@@ -8,10 +8,10 @@
 	<div class="container">
 		<h1>Hello Maxou</h1>
 		<div>
-			<a href="{{ path('trick_new') }}">Ajouter un article</a>
+			<a href="{{ path('trick_new') }}">Ajouter une figure</a>
 		</div>
 		<div>
-			<a href="{{ path('trick_edit',{id:18})}}">Editer le * article</a>
+			<a href="{{ path('trick_edit',{id:18})}}">Editer la figure n</a>
 		</div>
 
 		{% if app.user %}
@@ -24,6 +24,12 @@
 					<img class="trickHomeImg" src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}" alt={{ "snowboard figure " ~ trick.id }}>
 					<h3>{{ trick.title }}</h3>
 					<a href="{{ path('trick_show',{slug:trick.slug,id:trick.id})}}">Voir la figure</a>
+					{% if app.user %}
+						<a href="{{ path('trick_edit',{id:trick.id})}}">Editer la figure</a>
+					{% endif %}
+					{% if is_granted("trick_delete",trick) %}
+						<div>Supprimable</div>
+					{% endif %}
 				</div>
 			{% endfor %}
 		</div>

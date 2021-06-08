@@ -21,6 +21,7 @@ class TrickVoter extends Voter
     protected function voteOnAttribute(string $attribute, $trick, TokenInterface $token): bool
     {
         $user = $token->getUser();
+
         // if the user is anonymous, do not grant access
         if (!$user instanceof UserInterface) {
             return false;
@@ -32,7 +33,7 @@ class TrickVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::TRICK_DELETE:
-                $this->canDelete($trick, $user);
+                return $this->canDelete($trick, $user);
                 break;
         }
 

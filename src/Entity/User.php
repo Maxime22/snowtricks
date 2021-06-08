@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -20,12 +21,14 @@ class User implements UserInterface
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @Groups("trick")
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\Length(min=3)
      */
     private $username;
 
@@ -37,6 +40,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Regex(pattern="/^(?=.*[!@#$%^&*-])(?=.*[0-9])(?=.*[A-Z]).{8,20}$/",message="Au moins 8 caractères, un chiffre, une majuscule et un caractère spécial parmi : !@#$%^&*-")
      */
     private $password;
 
@@ -77,6 +81,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="author")
+     * @Groups("trick")
      */
     private $tricks;
 

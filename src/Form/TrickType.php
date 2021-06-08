@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class TrickType extends AbstractType
 {
@@ -53,7 +54,9 @@ class TrickType extends AbstractType
                 'entry_type' => TextType::class,
                 'label' => false,
                 'entry_options' => [
-                    'attr' => ['class' => 'tricks_video_class', 'label' => false],
+                    'attr' => ['class' => 'tricks_video_class'],
+                    'label' => false,
+                    'constraints' => [new Regex(['pattern'=> '/https:\/\/www.youtube.com\/embed\//','message'=>"Votre lien doit être un lien Youtube de la forme : https://www.youtube.com/embed/..."])]
                 ],
                 'allow_add'=> true,
                 'allow_delete'=> true
@@ -62,9 +65,7 @@ class TrickType extends AbstractType
                 'entry_type' => ImageType::class,
                 'allow_add' => true,
                 'allow_delete' => true
-            ])
-            /*
-            ->add('author') */;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
