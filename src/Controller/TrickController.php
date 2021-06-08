@@ -72,7 +72,6 @@ class TrickController extends AbstractController
      */
     public function edit(Request $request, Trick $trick, FileUploader $fileUploader, ImageRepository $imageRepository): Response
     {
-        $em = $this->getDoctrine()->getManager();
         $images = $imageRepository->findBy(['trick' => $trick]);
         $arrayPhotoNames = null;
         foreach ($images as $image) {

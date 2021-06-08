@@ -10,9 +10,16 @@ function readURL(input,idImg) {
     }
 }
 
-document.querySelector('#trick_mainImg').addEventListener('change',function(){
-    readURL(this,'trick_mainImg_img');
-});
+if(document.querySelector('#trick_mainImg')){
+    document.querySelector('#trick_mainImg').addEventListener('change',function(){
+        readURL(this,'trick_mainImg_img');
+    });
+}
+if(document.querySelector('#profile_photoFile')){
+    document.querySelector('#profile_photoFile').addEventListener('change',function(){
+        readURL(this,'user_photo_img');
+    });
+}
 
 //when doc is ready
 $(function () {

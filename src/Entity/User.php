@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity("mail")
  * @UniqueEntity("username")
  */
-class User implements UserInterface,\Serializable
+class User implements UserInterface
 {
     /**
      * @ORM\Id
@@ -177,16 +177,6 @@ class User implements UserInterface,\Serializable
 
     public function eraseCredentials()
     { }
-
-    public function serialize()
-    {
-        return serialize([$this->id, $this->username, $this->password]);
-    }
-
-    public function unserialize($serialized)
-    {
-        list($this->id, $this->username, $this->password) = unserialize($serialized, ['allowed_classes' => false]);
-    }
 
     public function getIsValidated(): ?bool
     {

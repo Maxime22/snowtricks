@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class SecurityController extends AbstractController
@@ -40,7 +40,7 @@ class SecurityController extends AbstractController
      */
     public function subscription(
         Request $request,
-        UserPasswordEncoderInterface $encoder,
+        UserPasswordHasherInterface $passwordHasher,
         MailerInterface $mailer,
         TokenGeneratorInterface $tokenGenerator
     ) {
@@ -49,10 +49,11 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $encoder->encodePassword($user, $user->getPassword());
+            $password = $passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
             $user->setCreatedAt();
             $user->setIsValidated(false);
+            $user->setPhoto('avatar.jpeg');
 
             // we send a mail to obligate to validate the email
             $token = $tokenGenerator->generateToken();
@@ -146,7 +147,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/reset_password/{changePasswordToken}", name="reset_password")
      */
-    public function resetPassword(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function resetPassword(User $user, Request $request, UserPasswordHasherInterface $passwordHasher)
     {
         $form = $this->createForm(ResetPasswordType::class);
         $form->handleRequest($request);
@@ -157,7 +158,7 @@ class SecurityController extends AbstractController
             $redirectNullUser = $this->checkUser($user, 'Token Unknown', 'login');
             if ($redirectNullUser) return $redirectNullUser;
 
-            $user->setPassword($passwordEncoder->encodePassword($user, $form->get('password')->getData()));
+            $user->setPassword($passwordHasher->hashPassword($user, $form->get('password')->getData()));
             $user->setChangePasswordToken(null);
             $user->setUpdatedAt();
             $em->flush();

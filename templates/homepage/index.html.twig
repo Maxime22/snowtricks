@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<img class="homeBigImg" src="/images/home/snowboard.jpg" alt="Image de couverture Snowboard"/>
+	<img class="homeBigImg" src="/images/home/snowboard.jpg" alt="Image de couverture snowboard"/>
 	<div class="container">
 		<h1>Hello Maxou</h1>
 		<div>
@@ -14,7 +14,9 @@
 			<a href="{{ path('trick_edit',{id:18})}}">Editer le * article</a>
 		</div>
 
-		<a href="{{ asset('images/tricks/uploads/' ~ 'rurouni-kenshin-60b6429879fef.jpg') }}">View Image</a>
+		{% if app.user %}
+			<a href="{{ path('profile',{id:app.user.id})}}">Voir mon profil</a>
+		{% endif %}
 
 		<div class="row trickContainer">
 			{% for trick in tricks %}
