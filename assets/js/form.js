@@ -69,7 +69,6 @@ $(function () {
                 
                 // for preview, we need to create addEventListener after we create the element in the DOM
                 if(ulType === "Photo"){
-                    console.log($(this).children('.mb-3'));
                     $(this).children('.mb-3').children('input').on('change',function(){
                         readURL(this,'trick_img_'+index+ulType);
                     });
@@ -130,7 +129,6 @@ $(function () {
         // for preview, needs to be after we create the element in the DOM
         if(ulType === "Photo"){
             var previewCounter = counter - 1;
-            console.log('#trick_images_'+previewCounter+' .mb-3 input')
             document.querySelector('#trick_images_'+previewCounter+' .mb-3 input').addEventListener('change',function(){
                 readURL(this,'trick_img_'+previewCounter+ulType);
             });
