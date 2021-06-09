@@ -6,6 +6,7 @@
 parameters:
     trickUpload_directory: '%kernel.project_dir%/public/images/tricks/uploads'
     userUpload_directory: '%kernel.project_dir%/public/images/users/uploads'
+    testImages_directory: '%kernel.project_dir%/public/test_images'
 
 services:
     # default configuration for services in *this* file

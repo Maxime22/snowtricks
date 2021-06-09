@@ -15,7 +15,6 @@ $('#getMoreComments').on("click",function () {
             for(var i=0;i<newComments.length;i++){
                 var newDiv = $('<div class="col-md-12 mt-3"></div>')
                 var newImg = $('<img class="commentAuthorPhoto">')
-                // TODO GET IMG
                 newImg.attr("src", "/images/users/uploads/"+ newComments[i].author.photo)
                 newImg.attr("alt","Photo de l'auteur "+ newComments[i].id)
 

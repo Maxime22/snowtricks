@@ -35,12 +35,14 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Email
+     * @Assert\NotBlank
      */
     private $mail;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Regex(pattern="/^(?=.*[!@#$%^&*-])(?=.*[0-9])(?=.*[A-Z]).{8,20}$/",message="Au moins 8 caractères, un chiffre, une majuscule et un caractère spécial parmi : !@#$%^&*-")
+     * @Assert\Regex(pattern="/^(?=.*[!@#$%^&*-])(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,20}$/",message="Au moins 8 caractères, un chiffre, une majuscule et un caractère spécial parmi : !@#$%^&*-")
+     * @Assert\NotBlank
      */
     private $password;
 
@@ -290,5 +292,9 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    public function getUserIdentifier(){
+        return $this->username;
     }
 }

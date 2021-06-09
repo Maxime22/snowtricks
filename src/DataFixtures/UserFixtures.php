@@ -20,7 +20,7 @@ class UserFixtures extends Fixture
     {
         $user = new User();
         $user->setUsername('demo');
-        $user->setMail('max092@hotmail.fr');
+        $user->setMail('demo@hotmail.fr');
         $user->setCreatedAt();
         $user->setIsValidated(true);
         $user->setPassword($this->passwordHasher->hashPassword($user,'demo'));

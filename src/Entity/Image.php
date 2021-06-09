@@ -5,14 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
- * @UniqueEntity(
- *  fields={"name"},
- *  message="Ce nom de fichier est déjà utilisé"
- * )
  */
 class Image
 {
@@ -64,7 +59,7 @@ class Image
         return $this->file;
     }
 
-    public function setFile(UploadedFile $file): self
+    public function setFile($file): self
     {
         $this->file = $file;
 
