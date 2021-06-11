@@ -88,9 +88,6 @@ class SecurityController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $redirectNullUser = $this->checkUser($user, '', 'login');
-        if ($redirectNullUser) return $redirectNullUser;
-
         // we active the account
         $user->setIsValidated(true);
         $user->setSubscriptionToken(null);
@@ -145,7 +142,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/reset_password/{changePasswordToken}", name="reset_password")
+     * @Route("/resetPassword/{changePasswordToken}", name="reset_password")
      */
     public function resetPassword(User $user, Request $request, UserPasswordHasherInterface $passwordHasher)
     {

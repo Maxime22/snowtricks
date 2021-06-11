@@ -1,1 +1,13 @@
 save: Sauvegarder
+login: Se connecter
+login.notSubscribedYet?: Pas encore inscrit ?
+password.forgotten?: Mot de passe oublié ?
+password.forgotten: Mot de passe oublié
+password: Mot de passe
+username: Pseudo
+subscription: Inscription
+subscribe: S'inscrire
+Mail: Email
+resetPassword: Changer le mot de passe
+Repeat Password: Répéter le mot de passe
+Password: Mot de passe

@@ -16,11 +16,13 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class TrickController extends AbstractController
 {
     /**
      * @Route("/trick/new", name="trick_new", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function new(Request $request, FileUploader $fileUploader, UserRepository $userRepository): Response
     {
@@ -57,6 +59,7 @@ class TrickController extends AbstractController
             $newComment->setTrick($trick);
             $em->persist($newComment);
             $em->flush();
+            $this->addFlash('notice', 'Commentaire ajouté');
             return $this->redirectToRoute('trick_show', ['id' => $trick->getId(), 'slug' => $trick->getSlug()]);
         }
 
@@ -69,6 +72,7 @@ class TrickController extends AbstractController
 
     /**
      * @Route("/trick/{id}/edit", name="trick_edit", methods={"GET","POST"}, requirements={"id":"\d+"})
+     * @IsGranted("ROLE_USER")
      */
     public function edit(Request $request, Trick $trick, FileUploader $fileUploader, ImageRepository $imageRepository): Response
     {

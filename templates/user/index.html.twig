@@ -4,23 +4,25 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Votre profil</h1>
+	<div class="container">
+		<h1>Mon profil</h1>
 
-	{% for message in app.flashes('notice') %}
-		<div class="alert alert-primary">{{ message }}</div>
-	{% endfor %}
-	{{ include('user/_form.html.twig') }}
-
-	<h2>Mes tricks</h2>
-	{% if tricks is defined %}
-		{% for trick in tricks %}
-			<div class="col-md-4 mt-3">
-				<img class="trickHomeImg" src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}" alt={{ "snowboard figure " ~ trick.id }}>
-				<h3>{{ trick.title }}</h3>
-				<a href="{{ path('trick_show',{slug:trick.slug,id:trick.id})}}">Voir la figure</a>
-			</div>
+		{% for message in app.flashes('notice') %}
+			<div class="alert alert-primary">{{ message }}</div>
 		{% endfor %}
-	{% endif %}
+		{{ include('user/_form.html.twig') }}
+
+		<h2>Mes tricks</h2>
+		{% if tricks is defined %}
+			{% for trick in tricks %}
+				<div class="col-md-4 mt-3">
+					<img class="trickHomeImg" src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}" alt={{ "snowboard figure " ~ trick.id }}>
+					<h3>{{ trick.title }}</h3>
+					<a class="btn btn-primary" href="{{ path('trick_show',{slug:trick.slug,id:trick.id})}}">Voir la figure</a>
+				</div>
+			{% endfor %}
+		{% endif %}
+	</div>
 
 {% endblock %}
 

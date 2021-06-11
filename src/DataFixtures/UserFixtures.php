@@ -18,13 +18,21 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $user = new User();
-        $user->setUsername('demo');
-        $user->setMail('demo@hotmail.fr');
-        $user->setCreatedAt();
-        $user->setIsValidated(true);
-        $user->setPassword($this->passwordHasher->hashPassword($user,'demo'));
-        $manager->persist($user);
+        $data=[
+            "username"=>['demo','demo2'],
+            "mail"=>['demo@hotmail.fr', 'demo2@hotmail.fr']
+        ];
+
+        for ($i = 0; $i < count($data['username']); $i++) {
+            $user = new User();
+            $user->setUsername($data['username'][$i]);
+            $user->setMail($data['mail'][$i]);
+            $user->setCreatedAt();
+            $user->setIsValidated(true);
+            $user->setPassword($this->passwordHasher->hashPassword($user, $data['username'][$i]));
+            $manager->persist($user);
+        }
+
         $manager->flush();
 
         // other fixtures can get this object using the UserFixtures::ADMIN_USER_REFERENCE constant

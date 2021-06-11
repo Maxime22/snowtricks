@@ -11,14 +11,20 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class UserController extends AbstractController{
 
     /**
      * @Route("/profile/{id}", name="profile")
+     * @IsGranted("ROLE_USER")
      */
     public function index(User $user, Request $request, TrickRepository $trickRepository, FileUploader $fileUploader): Response
     {
+        if($this->getUser()->getId() !== $user->getId()){
+            return $this->redirectToRoute('home');
+        }
+
         $form = $this->createForm(ProfileType::class, $user);
         $form->handleRequest($request);
 

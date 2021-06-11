@@ -10,6 +10,8 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class TrickFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const DEMO_TRICK_REFERENCE = 'demo-trick';
+
     public function load(ObjectManager $manager)
     {
         $author = UserFixtures::DEMO_USER_REFERENCE;
@@ -26,6 +28,8 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
         }
 
         $manager->flush();
+
+        $this->addReference(self::DEMO_TRICK_REFERENCE, $trick);
     }
 
     // otherwise, by default, fixtures are linked in the alphabetical order and trick couldn't have user demo const

@@ -9,9 +9,37 @@
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
+		<script src="https://kit.fontawesome.com/f9dc03a584.js" crossorigin="anonymous"></script>
 	</head>
 	<body>
+		<header>
+			<nav class="navbar fixed-top navbar-dark bg-dark navbar-expand-lg">
+				<a class="navbar-brand" href="{{ path('home') }}">
+					<img class="logoNavbar" src="{{ asset('images/home/logo.png') }}" alt="Logo Snowtricks">
+				</a>
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item me-3">
+						<a href="{{ path('home')}}">Accueil</a>
+					</li>
+					{% if app.user %}
+						<li class="nav-item me-3">
+							<a href="{{ path('profile',{id:app.user.id})}}">Profil</a>
+						</li>
+					{% endif %}
+					<li class="nav-item">
+						{% if app.user %}
+							<a id="logout" href="{{ path('logout')}}">Se déconnecter</a>
+						{% else %}
+							<a id="login" href="{{ path('login')}}">Se connecter</a>
+						{% endif %}
+					</li>
+				</ul>
+			</nav>
+		</header>
 		{% block body %}{% endblock %}
+		<footer>
+			©Copyright Maxime Sabouret
+		</footer>
 	</body>
 	{% block javascripts %}
 		{{ encore_entry_script_tags('app') }}

@@ -42,14 +42,16 @@
 			</tr>
 		</tbody>
 	</table>
-
+	{% for message in app.flashes('notice') %}
+		<div class="alert alert-success">{{ message }}</div>
+	{% endfor %}
 	{% if app.user %}
 		{{ include('comment/_form.html.twig') }}
 	{% endif %}
 	<div class="row commentsContainer">
 		{% if comments %}
 			{% for comment in comments|slice(0, 5) %}
-				<div class="col-md-12 mt-3">
+				<div class="col-md-12 mt-3 commentContainer">
 					<img class="commentAuthorPhoto" src="{{ asset('images/users/uploads/' ~ comment.author.photo) }}" alt={{ "Photo de l'auteur " ~ comment.id }}>
 					<div>{{ comment.title }}</div>
 					<div>{{ comment.content }}</div>
@@ -58,7 +60,7 @@
 		{% endif %}
 	</div>
 	{% if comments|length > 5 %}
-	<button id="getMoreComments" class="btn btn-primary">Afficher plus de commentaires</button>
+		<button id="getMoreComments" class="btn btn-primary">Afficher plus de commentaires</button>
 	{% endif %}
 {% endblock %}
 

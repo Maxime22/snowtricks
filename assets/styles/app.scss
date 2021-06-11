@@ -1,39 +1,133 @@
-/* HOME */
-.homeBigImg{
-    object-fit: cover;
-    width:100%;
-    height: 100vh;
+body .container {
+  margin-top: 100px !important;
+  min-height:550px;
 }
 
-.trickHomeImg{
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+a {
+  text-decoration: none !important;
+}
+
+a h3,
+a i {
+  color: #033c73;
+}
+
+i {
+  font-size: 1.3rem;
+}
+
+nav {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+footer {
+  height: 100px;
+  color: white;
+  background-color: rgb(37, 37, 37);
+  padding-top: 20px;
+  text-align: center;
+}
+
+/* HOME */
+.logoNavbar {
+  height: 60px;
+}
+
+.logoTitle {
+  height: 200px;
+}
+
+.subtitleLogo {
+  font-size: 2rem;
+}
+
+.nav-item a,
+.nav-item a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+.trickHomeImg {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.homePageBigImgContainer {
+  position: relative;
+}
+
+.homeBigImg {
+  object-fit: cover;
+  width: 100%;
+  height: 100vh;
+  filter: brightness(50%);
+}
+
+.homePageBigTitle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white !important;
+}
+
+.oneTrickContainer {
+  border: 1px solid rgb(201, 201, 201);
+}
+
+#goDown {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+}
+
+.goDownImg,
+.goUpImg {
+  height: 40px;
+  width: 40px;
+}
+
+.goUpContainer {
+  position: relative;
+  display: none;
+  height: 50px;
+}
+
+.goUpImg {
+  position: absolute;
+  bottom: 50%;
+  right: 5%;
+}
+
+.homeContainer {
+  padding: 20px 100px 20px 100px;
 }
 
 /* FORMS */
 
 .invalid-feedback {
-    text-align: center;
-    padding: 5px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    background-color: #f2dede;
-    color: #a94442;
-    border: 1px #ebcccc solid;
+  text-align: center;
+  padding: 5px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  background-color: #f2dede;
+  color: #a94442;
+  border: 1px #ebcccc solid;
 }
 
 /* COMMENTS */
 
-.commentAuthorPhoto{
-    height:100px;
-    width:100px;
-    object-fit: cover;
-    border-radius: 400px;
+.commentAuthorPhoto {
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  border-radius: 400px;
 }
 
-label.custom-file-label{
-    display: none !important;
+label.custom-file-label {
+  display: none !important;
 }
 
-@import '~bootstrap/scss/bootstrap';
+@import "~bootstrap/scss/bootstrap";
