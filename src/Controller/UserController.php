@@ -36,7 +36,7 @@ class UserController extends AbstractController{
             $photoFile = $form->get('photoFile')->getData();
             if ($photoFile) {
                 $oldFile = null;
-                if ($user->getPhoto()) {
+                if ($user->getPhoto() && $user->getPhoto() !== "avatar.jpeg") {
                     $oldFile = new File($this->getParameter('userUpload_directory') . "/" . $user->getPhoto());
                 }
                 $newFilename = $fileUploader->upload($photoFile, $this->getParameter('userUpload_directory'), $oldFile);

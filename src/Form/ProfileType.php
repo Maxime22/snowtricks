@@ -41,6 +41,7 @@ class ProfileType extends AbstractType
                 ],
             ])
             ;
+            // this form will also test (by validators) the password even if it is not in the adds
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -1,7 +1,7 @@
 {{ form_start(form) }}
 
 <div class="row">
-	<div class="col-md-12 form-group">
+	<div class="col-md-12 form-group mb-3">
 		<div>
 			{{ form_label(form.mail) }}
 		</div>
@@ -10,7 +10,7 @@
 		</div>
 		{{ form_widget(form.mail, {'attr': {'class': 'form-control'}}) }}
 	</div>
-	<div class="col-md-12 form-group">
+	<div class="col-md-12 form-group mb-3">
 		<div>
 			{{ form_label(form.username) }}
 		</div>
@@ -19,7 +19,8 @@
 		</div>
 		{{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
 	</div>
-	<div>
+	<h2>Mon avatar</h2>
+	<div class="text-center">
 		<img id="user_photo_img" src="{{ (user.photo) ? '/images/users/uploads/' ~ user.photo : '' }}">
 	</div>
 	{{ form_row(form.photoFile) }}

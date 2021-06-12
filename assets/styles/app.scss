@@ -1,6 +1,6 @@
 body .container {
   margin-top: 100px !important;
-  min-height:550px;
+  min-height: 550px;
 }
 
 a {
@@ -105,6 +105,161 @@ footer {
   padding: 20px 100px 20px 100px;
 }
 
+/* SHOW */
+
+.showBackgroundBigImg {
+  height: 600px;
+  width: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  filter: brightness(40%);
+}
+
+.showContainer {
+  border: 1px rgb(201, 201, 201) solid;
+  background-color: white;
+  margin: 20px 100px 20px 100px;
+  position: relative;
+}
+
+.showTitle {
+  margin-top: 100px;
+  color: white;
+}
+
+.mainImgShow {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+.showTextContainer {
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+}
+
+.imgSizeShow {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.videoSizeShow {
+  width: 100%;
+  height: 200px;
+}
+
+.tagsShow {
+  background-color: rgb(201, 201, 201);
+  font-weight: bold;
+  border-radius: 5px;
+  border: 1px black solid;
+  text-align: center;
+  padding: 5px;
+}
+
+.titleAndContentCommentContainer {
+  border: 1px rgb(201, 201, 201) solid;
+  padding: 5px;
+}
+
+.divSeparator {
+  background-color: gray;
+  margin: auto;
+  height: 2px;
+  width: 60%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.mainImgInputShowContainer{
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  background-color: white;
+  border: 1px rgb(201, 201, 201) solid;
+  width: 100px !important;
+}
+
+/* NEW and EDIT TRICKS */
+
+.newEditBackgroundBigImg {
+  height: 600px;
+  width: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  filter: brightness(40%);
+}
+
+.newEditContainer {
+  border: 1px rgb(201, 201, 201) solid;
+  background-color: white;
+  margin: 20px 100px 20px 100px;
+  position: relative;
+}
+
+.newEditTitle {
+  margin-top: 100px;
+  color: white;
+}
+
+.mainImgForm {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+.newEditFormInputsContainer {
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+}
+
+.imgAddedInForm {
+  width: 100%;
+  object-fit: cover;
+  height: 150px;
+}
+
+.newEditTrickSaveButton {
+  font-size: 40px !important;
+}
+
+.mainImgInputContainer {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  background-color: white;
+  border: 1px rgb(201, 201, 201) solid;
+  width: 120px !important;
+}
+
+#trick_mainImg[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+.custom-file-upload {
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.deletePhoto i.fas,
+.deleteVideo i.fas {
+  cursor: pointer;
+}
+
 /* FORMS */
 
 .invalid-feedback {
@@ -117,6 +272,11 @@ footer {
   border: 1px #ebcccc solid;
 }
 
+.deletePhoto,
+.deleteVideo {
+  display: block;
+}
+
 /* COMMENTS */
 
 .commentAuthorPhoto {
@@ -126,8 +286,20 @@ footer {
   border-radius: 400px;
 }
 
+
 label.custom-file-label {
   display: none !important;
+}
+
+/* PROFILE */
+
+#user_photo_img{
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  border-radius: 400px;
+  margin-top:20px;
+  margin-bottom:20px;
 }
 
 @import "~bootstrap/scss/bootstrap";

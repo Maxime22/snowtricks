@@ -12,15 +12,32 @@
 		{% endfor %}
 		{{ include('user/_form.html.twig') }}
 
-		<h2>Mes tricks</h2>
 		{% if tricks is defined %}
-			{% for trick in tricks %}
-				<div class="col-md-4 mt-3">
-					<img class="trickHomeImg" src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}" alt={{ "snowboard figure " ~ trick.id }}>
-					<h3>{{ trick.title }}</h3>
-					<a class="btn btn-primary" href="{{ path('trick_show',{slug:trick.slug,id:trick.id})}}">Voir la figure</a>
-				</div>
-			{% endfor %}
+			<h2>Mes figures</h2>
+			<div class="row">
+				{% for trick in tricks %}
+					<div class="col-md-4 mt-3 mb-3 text-center">
+						<div class="oneTrickContainer">
+							<a href="{{ path('trick_show',{slug:trick.slug,id:trick.id})}}"><img class="trickHomeImg" src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}" alt="{{ "snowboard trick " ~ trick.id }}"></a>
+							<div class="pt-3 pb-3">
+								<a href="{{ path('trick_show',{slug:trick.slug,id:trick.id})}}">
+									<h3 class="d-inline-block">{{ trick.title }}</h3>
+								</a>
+								{% if app.user %}
+									<a href="{{ path('trick_edit',{id:trick.id})}}">
+										<i class="fas fa-edit ms-3"></i>
+									</a>
+								{% endif %}
+								{% if is_granted("trick_delete",trick) %}
+									<span>
+										<i class="fas fa-trash-alt ms-3 text-danger"></i>
+									</span>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
 		{% endif %}
 	</div>
 

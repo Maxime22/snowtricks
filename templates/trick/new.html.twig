@@ -4,12 +4,12 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container">
-		<h1>Nouvelle figure</h1>
-
+	<div><img class="newEditBackgroundBigImg" src="/images/home/snowboard.jpg" alt="Image de couverture snowboard"/></div>
+	<div class="text-center">
+		<h1 class="newEditTitle">Nouvelle figure</h1>
+	</div>
+	<div class="newEditContainer">
 		{{ include('trick/_form.html.twig') }}
-
-		<a href="{{ path('home') }}">Retour à la page d'accueil</a>
 	</div>
 {% endblock %}
 

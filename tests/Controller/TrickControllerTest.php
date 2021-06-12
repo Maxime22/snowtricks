@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\Trick;
 use App\Entity\User;
 use App\Tests\NeedLoginTrait;
 use Symfony\Component\HttpFoundation\Response;
@@ -113,4 +114,45 @@ class TrickControllerTest extends WebTestCase
     }
 
     // TODO, tester le new et son formulaire, le edit et son formulaire => les images et les vidéos ? => faire le front en même temps (aussi pour le show)
+
+    public function testNewTrick(){
+        $user = $this->em->getRepository(User::class)->findOneBy(["username" => "demo"]);
+        $this->login($this->client, $user);
+
+        $crawler = $this->client->request("GET", "/trick/new");
+        $form = $crawler->selectButton('Sauvegarder')->form([
+            'trick[title]' => 'demoComment',
+            'trick[content]' => 'i am happy to add a content youpi',
+            'trick[trickGroup]' => 'slide'
+        ]);
+        $this->client->submit($form);
+        $this->assertResponseRedirects();
+        $this->client->followRedirect();
+        $this->assertPageTitleSame("SnowTricks");
+
+        $this->deleteTrick('demoComment');
+    }
+
+    public function testEditTrick(){
+        $user = $this->em->getRepository(User::class)->findOneBy(["username" => "demo2"]);
+        $this->login($this->client, $user);
+
+        $crawler = $this->client->request("GET", "/trick/1/edit");
+        // TODO change figure0 here
+        $form = $crawler->selectButton('Sauvegarder')->form([
+            'trick[title]' => 'Figure0',
+            'trick[content]' => 'i am happy to add a content youpi',
+            'trick[trickGroup]' => 'slide'
+        ]);
+        $this->client->submit($form);
+        $this->assertResponseRedirects();
+        $this->client->followRedirect();
+        $this->assertPageTitleSame("SnowTricks");
+    }
+
+    public function deleteTrick($title){
+        $trick = $this->em->getRepository(Trick::class)->findOneBy(["title" => $title]);
+        $this->em->remove($trick);
+        $this->em->flush();
+    }
 }

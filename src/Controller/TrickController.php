@@ -32,7 +32,7 @@ class TrickController extends AbstractController
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->persistValidForm($form, $fileUploader, $trick, $author);
+            $this->persistValidForm($request, $form, $fileUploader, $trick, $author);
             return $this->redirectToRoute('home');
         }
 
@@ -48,7 +48,7 @@ class TrickController extends AbstractController
     public function show(Trick $trick, Request $request, CommentRepository $commentRepository): Response
     {
         $em = $this->getDoctrine()->getManager();
-        $comments = $commentRepository->findBy(['trick' => $trick]);
+        $comments = $commentRepository->findBy(['trick' => $trick],["createdAt"=>"DESC"]);
 
         $newComment = new Comment();
         $formComment = $this->createForm(CommentType::class, $newComment);
@@ -88,7 +88,7 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->persistValidForm($form, $fileUploader, $trick, null, $arrayPhotoNames);
+            $this->persistValidForm($request, $form, $fileUploader, $trick, null, $arrayPhotoNames);
             return $this->redirectToRoute('home');
         }
 
@@ -112,10 +112,13 @@ class TrickController extends AbstractController
             // Delete all images linked to the trick
             $images = $imageRepository->findBy(['trick' => $trick]);
             foreach ($images as $image) {
-                $fileToDelete = new File($this->getParameter('trickUpload_directory') . "/" . $image->getPath());
-                $this->deleteFile($fileToDelete);
+                if($image->getPath() !== "snowboard_main.jpeg"){
+                    $fileToDelete = new File($this->getParameter('trickUpload_directory') . "/" . $image->getPath());
+                    $this->deleteFile($fileToDelete);
+                }
             }
-            if ($trick->getMainImgName()) {
+            if ($trick->getMainImgName() && $trick->getMainImgName() !== "snowboard_main.jpeg"){
+                
                 $mainImgTodelete = new File($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
                 $this->deleteFile($mainImgTodelete);
             }
@@ -127,22 +130,24 @@ class TrickController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-    private function persistValidForm($form, $fileUploader, $trick, $author = null, $oldImages = null)
+    private function persistValidForm($request, $form, $fileUploader, $trick, $author = null, $oldImages = null)
     {
         $em = $this->getDoctrine()->getManager();
         /** @var UploadedFile $mainImgFile */
         $mainImgFile = $form->get('mainImg')->getData();
 
+        $mainImgSrcData = $request->request->get('mainImgSrcData');
+
         $videos = $form->get('videos')->getData();
 
         if ($mainImgFile) {
             $oldFile = null;
-            if ($trick->getMainImgName()) {
+            if ($trick->getMainImgName() && $trick->getMainImgName() !== "snowboard_main.jpeg") {
                 $oldFile = new File($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
             }
             $newFilename = $fileUploader->upload($mainImgFile, $this->getParameter('trickUpload_directory'), $oldFile);
             $trick->setMainImgName($newFilename);
-        } else if (!$trick->getMainImgName()) {
+        } else if (!$trick->getMainImgName() || $mainImgSrcData === "1") {
             $trick->setMainImgName('snowboard_main.jpeg');
         }
 

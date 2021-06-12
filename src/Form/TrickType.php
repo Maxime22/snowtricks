@@ -19,14 +19,6 @@ class TrickType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $entity = $builder->getData();
-
-        $imgRequired = true;
-
-        if ($entity->getId()) { // if there is an ID =, it means we are in an edit
-            $imgRequired = false;
-        }
-
         $builder
             ->add('title')
             ->add('trickGroup', ChoiceType::class, [
@@ -34,7 +26,7 @@ class TrickType extends AbstractType
             ])
             ->add('content', TextareaType::class)
             ->add('mainImg', FileType::class, [
-                'required' => $imgRequired,
+                'required' => false,
                 // unmapped options means that this field is not associated to any entity property
                 'mapped' => false,
                 'label' => false,

@@ -29,7 +29,7 @@ class UserFixtures extends Fixture
             $user->setMail($data['mail'][$i]);
             $user->setCreatedAt();
             $user->setIsValidated(true);
-            $user->setPassword($this->passwordHasher->hashPassword($user, $data['username'][$i]));
+            $user->setPassword($this->passwordHasher->hashPassword($user, "1234Jean%1234"));
             $manager->persist($user);
         }
 
