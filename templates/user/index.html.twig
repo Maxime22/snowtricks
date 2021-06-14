@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h1>Mon profil</h1>
+
+		{% for message in app.flashes('notice') %}
+			<div class="alert alert-primary">{{ message }}</div>
+		{% endfor %}
+		{{ include('user/_form.html.twig') }}
+
+		{% if tricks is defined %}
+			<h2>Mes figures</h2>
+			<div class="row">
+				{% for trick in tricks %}
+					<div class="col-md-4 mt-3 mb-3 text-center">
+						<div class="oneTrickContainer">
+							<a href="{{ path('trick_show',{slug:trick.slug,id:trick.id})}}">
+								<img class="trickHomeImg" src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}" alt="{{ "snowboard trick " ~ trick.id }}">
+							</a>
+							<div class="pt-3 pb-3">
+								<a href="{{ path('trick_show',{slug:trick.slug,id:trick.id})}}">
+									<h3 class="d-inline-block">{{ trick.title }}</h3>
+								</a>
+								{% if app.user %}
+									<a href="{{ path('trick_edit',{id:trick.id})}}">
+										<i class="fas fa-edit ms-3"></i>
+									</a>
+								{% endif %}
+								{% if is_granted("trick_delete",trick) %}
+									<span>
+										<i class="fas fa-trash-alt ms-3 text-danger"></i>
+									</span>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('form') }}
+{% endblock %}

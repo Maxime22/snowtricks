@@ -1,58 +1,129 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Trick
+{% block title %}
+	{{ trick.title }}
 {% endblock %}
 
 {% block body %}
-	<h1>Trick</h1>
+	<div><img class="showBackgroundBigImg" src="/images/home/snowboard.jpg" alt="Image de couverture snowboard"/></div>
+	<div class="text-center">
+		<h1 class="showTitle">{{ trick.title }}</h1>
+	</div>
 
-	<table class="table">
-		<tbody>
-			<tr>
-				<th>Id</th>
-				<td>{{ trick.id }}</td>
-			</tr>
-			<tr>
-				<th>Title</th>
-				<td>{{ trick.title }}</td>
-			</tr>
-			<tr>
-				<th>TrickGroup</th>
-				<td>{{ trick.trickGroup }}</td>
-			</tr>
-			<tr>
-				<th>Content</th>
-				<td>{{ trick.content }}</td>
-			</tr>
-			<tr>
-				<th>CreatedAt</th>
-				<td>{{ trick.createdAt ? trick.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-			</tr>
-			<tr>
-				<th>UpdatedAt</th>
-				<td>{{ trick.updatedAt ? trick.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-			</tr>
-			<tr>
-				<th>MainImg</th>
-				<td><img src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}"></td>
-			</tr>
-			<tr>
-				<th>Videos</th>
-				<td>{{ trick.videos ? trick.videos|join(', ') : '' }}</td>
-			</tr>
-		</tbody>
-	</table>
-
-	{% if app.user %}
-		{{ include('comment/_form.html.twig') }}
-	{% endif %}
-
-	{% if comments %}
-		{% for comment in comments %}
-			<div class="mb-3">
-				<div>{{ comment.title }}</div>
-				<div>{{ comment.content }}</div>
+	<div class="showContainer">
+		<img class="mainImgShow" src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}">
+		{% if app.user %}
+			<div class="mainImgInputShowContainer text-center pt-2 pb-2">
+				<a href="{{ path('trick_edit',{id:trick.id})}}">
+					<i class="fas fa-edit ms-3"></i>
+					{% if is_granted("trick_delete",trick) %}
+						<i class="fas fa-trash-alt ms-3 text-danger"></i>
+					{% endif %}
+				</a>
 			</div>
-		{% endfor %}
-	{% endif %}
+		{% endif %}
+
+		<div class="showTextContainer">
+			<div class="text-center">
+				<a href="#" id="loadMedia" class="d-block d-lg-none mt-3 mb-3">
+					<button class="btn btn-outline-secondary">Afficher les médias</button>
+				</a>
+				<a href="#" id="hideMedia" class="d-none mt-3 mb-3">
+					<button class="btn btn-outline-secondary">Masquer les médias</button>
+				</a>
+			</div>
+			<div class="row mt-3 showMedias d-none d-lg-flex">
+				{% for image in trick.images %}
+					<div class="col-md-4 mt-3">
+						<img class="imgSizeShow" src="{{ asset('images/tricks/uploads/' ~ image.path) }}" alt="Image {{ trick.title ~ loop.index }}">
+					</div>
+				{% endfor %}
+				{% for video in trick.videos %}
+					<div class="col-md-4 mt-3">
+						<iframe class="videoSizeShow" src="{{ video }}" title="YouTube video player" frameborder="0" allow="accelerometer; fullscreen; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+				{% endfor %}
+			</div>
+
+			<div class="text-justify pe-5 ps-5 mt-3 mb-4">
+				{{ trick.content }}
+			</div>
+
+			<div class="row mt-3 mb-3">
+				<div class="col">
+					<div class="tagsShow">Créé le
+						{{ trick.createdAt|date("d/m/Y") }}</div>
+				</div>
+				{% if trick.updatedAt is defined %}
+					<div class="col">
+						<div class="tagsShow">Modifié le
+							{{ trick.updatedAt|date("d/m/Y") }}</div>
+					</div>
+				{% endif %}
+				<div class="col">
+					<div class="tagsShow">Ecrit par
+						{{ trick.author.username }}</div>
+				</div>
+				<div class="col">
+					<div class="tagsShow">Type de figure :
+						{{ trick.trickGroup }}</div>
+				</div>
+			</div>
+
+			<div class="divSeparator"></div>
+			<div class="text-center">
+				<h2>Commentaires</h2>
+			</div>
+			{% for message in app.flashes('notice') %}
+				<div class="alert alert-success">{{ message }}</div>
+			{% endfor %}
+			{% if app.user %}
+				{{ include('comment/_form.html.twig') }}
+			{% else %}
+				<div class="text-center mb-3">Vous n'êtes pas encore
+					<a href="{{ path('login') }}">connecté</a>
+				</div>
+			{% endif %}
+			{% if comments %}
+				<div class="divSeparator"></div>
+				<div class="row commentsContainer">
+					{% for comment in comments|slice(0, 5) %}
+						<div class="col-md-12 mt-3 commentContainer">
+							<div class="row">
+								<div class="col-md-2 mb-3 text-center">
+									{% if comment.author.photo == "avatar.jpeg" %}
+										<img class="commentAuthorPhoto" src="{{ asset('images/users/' ~ comment.author.photo) }}" alt={{ "Photo de l'auteur " ~ comment.id }}>
+									{% else %}
+										<img class="commentAuthorPhoto" src="{{ asset('images/users/uploads/' ~ comment.author.photo) }}" alt={{ "Photo de l'auteur " ~ comment.id }}>
+									{% endif %}
+								</div>
+								<div class="col-md-10">
+									<div class="titleAndContentCommentContainer">
+										<div class="fw-bold">{{ comment.title }}</div>
+										<div class="fst-italic">Ajouté le
+											{{ comment.createdAt|date("d/m/Y") }}
+											par
+											{{ comment.author.username }}
+											:</div>
+										<div>{{ comment.content }}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+			{% if comments|length > 5 %}
+				<div class="text-center mt-3 mb-3">
+					<button id="getMoreComments" class="btn btn-primary">Afficher plus de commentaires</button>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('trickShow') }}
+	{{ encore_entry_script_tags('loadAndHideMedias') }}
 {% endblock %}

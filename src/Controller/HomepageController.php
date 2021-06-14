@@ -30,11 +30,15 @@ class HomepageController extends AbstractController
      */
     public function getMoreTricks(Request $request, TrickRepository $trickRepository)
     {
+        $user = $this->getUser();
         $offset = $request->request->get('offset');
-        $newTricks = $trickRepository->findBy([],null,10,$offset);
+        $newTricks = $trickRepository->findBy([], null, 10, $offset);
 
         return $this->json(
-            ['newTricks' => $newTricks],
+            [
+                'newTricks' => $newTricks,
+                'user' => $user
+            ],
             200,
             [],
             ['groups' => 'trick']

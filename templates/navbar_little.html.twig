@@ -1,0 +1,19 @@
+<nav class="navbar fixed-bottom navbar-dark bg-dark navbar-expand-lg d-block d-lg-none text-center navbarLittle">
+	<div class="row">
+		<div class="col">
+			<a href="{{ path('home')}}"><i class="fas fa-home"></i></a>
+		</div>
+		{% if app.user %}
+			<div class="col">
+				<a href="{{ path('profile',{id:app.user.id})}}"><i class="fas fa-user-alt"></i></a>
+			</div>
+		{% endif %}
+		<div class="col">
+			{% if app.user %}
+				<a id="logout" href="{{ path('logout')}}"><i class="fas fa-sign-out-alt"></i></a>
+			{% else %}
+				<a id="login" href="{{ path('login')}}"><i class="fas fa-sign-in-alt"></i></a>
+			{% endif %}
+		</div>
+	</div>
+</nav>

@@ -13,19 +13,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class TrickType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $entity = $builder->getData();
-
-        $imgRequired = true;
-
-        if ($entity->getId()) { // if there is an ID =, it means we are in an edit
-            $imgRequired = false;
-        }
-
         $builder
             ->add('title')
             ->add('trickGroup', ChoiceType::class, [
@@ -33,7 +26,7 @@ class TrickType extends AbstractType
             ])
             ->add('content', TextareaType::class)
             ->add('mainImg', FileType::class, [
-                'required' => $imgRequired,
+                'required' => false,
                 // unmapped options means that this field is not associated to any entity property
                 'mapped' => false,
                 'label' => false,
@@ -53,7 +46,9 @@ class TrickType extends AbstractType
                 'entry_type' => TextType::class,
                 'label' => false,
                 'entry_options' => [
-                    'attr' => ['class' => 'tricks_video_class', 'label' => false],
+                    'attr' => ['class' => 'tricks_video_class'],
+                    'label' => false,
+                    'constraints' => [new Regex(['pattern'=> '/https:\/\/www.youtube.com\/embed\//','message'=>"Votre lien doit être de la forme : https://www.youtube.com/embed/..."])]
                 ],
                 'allow_add'=> true,
                 'allow_delete'=> true
@@ -62,9 +57,7 @@ class TrickType extends AbstractType
                 'entry_type' => ImageType::class,
                 'allow_add' => true,
                 'allow_delete' => true
-            ])
-            /*
-            ->add('author') */;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

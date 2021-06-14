@@ -1,61 +1,98 @@
 {{ form_start(form) }}
 
 <div class="row">
-	<div class="col-md-12 form-group">
-		<div>
-			{{ form_label(form.title) }}
-		</div>
-		<div class="form_error">
-			{{ form_errors(form.title) }}
-		</div>
-		{{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
-	</div>
-	<div class="col-md-12 form-group">
-		<div>
-			{{ form_label(form.trickGroup) }}
-		</div>
-		<div class="form_error">
-			{{ form_errors(form.trickGroup) }}
-		</div>
-		{{ form_widget(form.trickGroup, {'attr': {'class': 'form-select'}}) }}
-	</div>
-	<div class="col-md-12 form-group">
-		<div>
-			{{ form_label(form.content) }}
-		</div>
-		<div class="form_error">
-			{{ form_errors(form.content) }}
-		</div>
-		{{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
-	</div>
 	<div>
-		<img id="trick_mainImg_img" src="{{ (trick.mainImgName) ? '/images/tricks/uploads/' ~ trick.mainImgName : '' }}">
+		<img class="mainImgForm" id="trick_mainImg_img" src="{{ (trick.mainImgName) ? '/images/tricks/uploads/' ~ trick.mainImgName : '/images/tricks/snowboard_main.jpeg' }}">
+		<input type="hidden" id="mainImgSrcData" name="mainImgSrcData" value="0">
 	</div>
-	{{ form_row(form.mainImg) }}
+	<div class="mainImgInputContainer">
+		<label for="trick_mainImg" class="custom-file-upload">
+			<i class="fa fa-cloud-upload"></i>
+		</label>
+		{{ form_widget(form.mainImg) }}
+		<a href="#" class="deleteMainImg">
+			<i class="fas fa-trash-alt ms-3 text-danger"></i>
+		</a>
+	</div>
+	<div class="newEditFormInputsContainer">
+		<div class="col-md-12 form-group mt-3">
+			<div>
+				{{ form_label(form.title) }}
+			</div>
+			<div>
+				{{ form_errors(form.title) }}
+			</div>
+			{{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+		</div>
+		<div class="col-md-12 form-group">
+			<div>
+				{{ form_label(form.content) }}
+			</div>
+			<div class="form_error">
+				{{ form_errors(form.content) }}
+			</div>
+			{{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+		</div>
+		<div class="col-md-12 form-group">
+			<div>
+				{{ form_label(form.trickGroup) }}
+			</div>
+			<div>
+				{{ form_errors(form.trickGroup) }}
+			</div>
+			{{ form_widget(form.trickGroup, {'attr': {'class': 'form-select'}}) }}
+		</div>
 
-	<div>
-		<ul
-			id="photo_field_list" data-prototype="{{ form_widget(form.images.vars.prototype)|e }}" data-ul-type="Photo" data-array-photos="{{ arrayPhotosForPreview is defined ? arrayPhotosForPreview : '' }}" data-widget-counter="{{ form.images|length }}">
-			{{ form_widget(form.images) }}
-		</ul>
-		<button type="button" class="add-another-collection-widget btn btn-primary" data-list-selector="#photo_field_list">Ajouter une image</button>
-	</div>
-	<div>
-		<ul id="video_field_list" data-prototype="{{ form_widget(form.videos.vars.prototype)|e }}" data-ul-type="Video" data-widget-counter="{{ form.videos|length }}">
-			{# Javascript here #}
-			{{ form_widget(form.videos) }}
-		</ul>
-		<button type="button" class="add-another-collection-widget btn btn-primary" data-list-selector="#video_field_list">Ajouter une vidéo</button>
+
+		<div class="text-center">
+			<a href="#" id="loadMedia" class="d-block d-lg-none mt-3 mb-3">
+				<button class="btn btn-outline-secondary">Afficher les médias</button>
+			</a>
+			<a href="#" id="hideMedia" class="d-none mt-3 mb-3">
+				<button class="btn btn-outline-secondary">Masquer les médias</button>
+			</a>
+		</div>
+		<div class="row mt-3 showMedias d-none d-lg-flex">
+			<div class="mt-5">
+				<h3>Images</h3>
+			</div>
+			<div>
+				<button type="button" class="add-another-collection-widget btn btn-primary mb-3" data-list-selector="#photo_field_list">Ajouter une image</button>
+				<div id="photo_field_list" data-prototype="{{ form_widget(form.images.vars.prototype)|e }}" data-ul-type="Photo" data-array-photos="{{ arrayPhotosForPreview is defined ? arrayPhotosForPreview : '' }}" data-widget-counter="{{ form.images|length }}">
+					{{ form_widget(form.images) }}
+				</div>
+			</div>
+			<h3>Vidéos</h3>
+			<div>
+				<button type="button" class="add-another-collection-widget btn btn-primary mb-3" data-list-selector="#video_field_list">Ajouter une vidéo</button>
+				{{ form_errors(form.videos) }}
+				<div
+					id="video_field_list" data-prototype="{{ form_widget(form.videos.vars.prototype)|e }}" data-ul-type="Video" data-widget-counter="{{ form.videos|length }}">
+					{# Javascript here #}
+					{{ form_widget(form.videos) }}
+				</div>
+			</div>
+		</div>
+
 	</div>
 </div>
 {{ form_widget(form) }}
 
-<div class="text-center">
-	<button id="submit_button" class="btn btn-primary">{{"save"|trans}}</button>
+<div class="text-center mb-3">
+	<button id="submit_button" class="btn btn-success newEditTrickSaveButton">{{"save"|trans}}</button>
 </div>
 
 {{ form_end(form) }}
 
 {% if trick.id %}
-	{{ include('trick/_delete_form.html.twig') }}
+	{% if is_granted("trick_delete" , trick) %}
+		<div class="text-center mb-3">
+			<h3 class="text-danger mb-3 mt-5">Danger zone</h3>
+			{{ include('trick/_delete_form.html.twig') }}
+		</div>
+	{% endif %}
 {% endif %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags('loadAndHideMedias') }}
+{% endblock %}

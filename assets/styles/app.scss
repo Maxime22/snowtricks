@@ -1,24 +1,327 @@
+body .container {
+  margin-top: 100px !important;
+  min-height: 800px;
+}
+
+.navbarLittle {
+  min-height: 40px;
+}
+
+.navbarLittle a,
+.navbarLittle a:hover, .navbarLittle a i{
+  color: white;
+  text-decoration: none;
+  font-size:50px;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+a h3,
+a i {
+  color: #033c73;
+}
+
+i {
+  font-size: 1.3rem;
+}
+
+nav {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+footer {
+  height: 100px;
+  color: white;
+  background-color: rgb(37, 37, 37);
+  padding-top: 20px;
+  text-align: center;
+}
+
 /* HOME */
-.homeBigImg{
-    object-fit: cover;
-    width:100%;
-    height: 100vh;
+.logoNavbar {
+  height: 60px;
 }
 
-.trickHomeImg{
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+.logoTitle {
+  height: 200px;
 }
 
-.form_error{
+.subtitleLogo {
+  font-size: 2rem;
+}
 
+.nav-item a,
+.nav-item a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+.trickHomeImg {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.homePageBigImgContainer {
+  position: relative;
+}
+
+.homeBigImg {
+  object-fit: cover;
+  width: 100%;
+  height: 100vh;
+  filter: brightness(50%);
+}
+
+.homePageBigTitle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white !important;
+}
+
+.oneTrickContainer {
+  border: 1px solid rgb(201, 201, 201);
+}
+
+#goDown {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+}
+
+.goDownImg,
+.goUpImg {
+  height: 40px;
+  width: 40px;
+}
+
+.goUpContainer {
+  position: relative;
+  display: none;
+  height: 50px;
+}
+
+.goUpImg {
+  position: absolute;
+  bottom: 50%;
+  right: 5%;
+}
+
+.homeContainer {
+  padding: 20px 100px 20px 100px;
+}
+
+/* SHOW */
+
+.showBackgroundBigImg {
+  height: 600px;
+  width: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  filter: brightness(40%);
+}
+
+.showContainer {
+  border: 1px rgb(201, 201, 201) solid;
+  background-color: white;
+  margin: 20px 100px 20px 100px;
+  position: relative;
+}
+
+.showTitle {
+  margin-top: 100px;
+  color: white;
+}
+
+.mainImgShow {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+.showTextContainer {
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+}
+
+.imgSizeShow {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.videoSizeShow {
+  width: 100%;
+  height: 200px;
+}
+
+.tagsShow {
+  background-color: rgb(201, 201, 201);
+  font-weight: bold;
+  border-radius: 5px;
+  border: 1px black solid;
+  text-align: center;
+  padding: 5px;
+}
+
+.titleAndContentCommentContainer {
+  border: 1px rgb(201, 201, 201) solid;
+  padding: 5px;
+}
+
+.divSeparator {
+  background-color: gray;
+  margin: auto;
+  height: 2px;
+  width: 60%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.mainImgInputShowContainer {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  background-color: white;
+  border: 1px rgb(201, 201, 201) solid;
+  width: 100px !important;
+}
+
+/* NEW and EDIT TRICKS */
+
+.newEditBackgroundBigImg {
+  height: 600px;
+  width: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  filter: brightness(40%);
+}
+
+.newEditContainer {
+  border: 1px rgb(201, 201, 201) solid;
+  background-color: white;
+  margin: 20px 100px 20px 100px;
+  position: relative;
+}
+
+.newEditTitle {
+  margin-top: 100px;
+  color: white;
+}
+
+.mainImgForm {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+.newEditFormInputsContainer {
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+}
+
+.imgAddedInForm {
+  width: 100%;
+  object-fit: cover;
+  height: 150px;
+}
+
+.newEditTrickSaveButton {
+  font-size: 40px !important;
+}
+
+.mainImgInputContainer {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  background-color: white;
+  border: 1px rgb(201, 201, 201) solid;
+  width: 120px !important;
+}
+
+#trick_mainImg[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+.custom-file-upload {
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.deletePhoto i.fas,
+.deleteVideo i.fas {
+  cursor: pointer;
 }
 
 /* FORMS */
 
-label.custom-file-label{
-    display: none !important;
+.invalid-feedback {
+  text-align: center;
+  padding: 5px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  background-color: #f2dede;
+  color: #a94442;
+  border: 1px #ebcccc solid;
 }
 
-@import '~bootstrap/scss/bootstrap';
+.deletePhoto,
+.deleteVideo {
+  display: block;
+}
+
+/* COMMENTS */
+
+.commentAuthorPhoto {
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  border-radius: 400px;
+}
+
+label.custom-file-label {
+  display: none !important;
+}
+
+/* PROFILE */
+
+#user_photo_img {
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  border-radius: 400px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+@media all and (max-width: 991px) {
+
+  .logoTitle{
+    height: 100px;
+  }
+
+  .subtitleLogo {
+    font-size: 1rem;
+}
+
+}
+
+@import "~bootstrap/scss/bootstrap";

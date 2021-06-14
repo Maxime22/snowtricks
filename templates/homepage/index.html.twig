@@ -1,41 +1,58 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomepageController!
+{% block title %}SnowTricks
 {% endblock %}
 
 {% block body %}
-	<img class="homeBigImg" src="/images/home/snowboard.jpg" alt="Image de couverture Snowboard"/>
-	<div class="container">
-		<h1>Hello Maxou</h1>
-		<div>
-			<a href="{{ path('trick_new') }}">Ajouter un article</a>
+	<div class="homePageBigImgContainer text-center">
+		<img class="homeBigImg" src="/images/home/snowboard.jpg" alt="Image de couverture snowboard"/>
+		<div class="homePageBigTitle">
+			<img class="logoTitle" src="{{ asset('images/home/logo.png') }}" alt="Logo Snowtricks">
+			<div class="subtitleLogo">La nouvelle communauté des riders enneigés</div>
 		</div>
-		<div>
-			<a href="{{ path('trick_edit',{id:18})}}">Editer le * article</a>
-		</div>
-
-		<a href="{{ asset('images/tricks/uploads/' ~ 'rurouni-kenshin-60b6429879fef.jpg') }}">View Image</a>
-
-		<div class="row trickContainer">
+		<a id="goDown" href="/#trickContainer"><img class="goDownImg" src="{{ asset('images/home/arrow-down.png') }}" alt="Icone flèche qui descend"></a>
+	</div>
+	<div class="homeContainer">
+		<div id="trickContainer" class="row trickContainer text-center">
+			<div class="mt-5 mb-5">
+				<h1>Découvrez les meilleures figures sur Snowtricks</h1>
+			</div>
+			{% if app.user %}
+				<div class="text-end">
+					<a class="btn btn-success" href="{{ path('trick_new') }}">Ajouter une figure</a>
+				</div>
+			{% endif %}
 			{% for trick in tricks %}
-				<div class="col-md-4 mt-3">
-					<img class="trickHomeImg" src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}" alt={{ "snowboard figure " ~ trick.id }}>
-					<h3>{{ trick.title }}</h3>
-					<a href="{{ path('trick_show',{slug:trick.slug,id:trick.id})}}">Voir la figure</a>
+				<div class="col-md-4 mt-3 text-center">
+					<div class="oneTrickContainer">
+						<a href="{{ path('trick_show',{slug:trick.slug,id:trick.id})}}">
+							<img class="trickHomeImg" src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}" alt="{{ "snowboard trick " ~ trick.id }}">
+						</a>
+						<div class="pt-3 pb-3">
+							<a href="{{ path('trick_show',{slug:trick.slug,id:trick.id})}}">
+								<h3 class="d-inline-block">{{ trick.title }}</h3>
+							</a>
+							{% if app.user %}
+								<a href="{{ path('trick_edit',{id:trick.id})}}">
+									<i class="fas fa-edit ms-3"></i>
+								</a>
+							{% endif %}
+							{% if is_granted("trick_delete",trick) %}
+								<span>
+									<i class="fas fa-trash-alt ms-3 text-danger"></i>
+								</span>
+							{% endif %}
+						</div>
+					</div>
 				</div>
 			{% endfor %}
 		</div>
-		<button id="getMoreTricks" class="btn btn-primary">Afficher plus de figures</button>
-
-		{% if app.user %}
-			<div>
-				<a href="{{ path('logout')}}">Se déconnecter</a>
-			</div>
-		{% else %}
-			<div>
-				<a href="{{ path('login')}}">Se connecter</a>
-			</div>
-		{% endif %}
+		<div class="text-center mb-3 mt-3">
+			<button id="getMoreTricks" class="btn btn-primary">Afficher plus de figures</button>
+		</div>
+		<div class="goUpContainer">
+			<a href="/#trickContainer"><img class="goUpImg" src="{{ asset('images/home/arrow-up.png') }}" alt="Icone flèche qui monte"></a>
+		</div>
 	</div>
 {% endblock %}
 

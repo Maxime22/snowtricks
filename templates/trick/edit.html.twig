@@ -1,11 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Trick{% endblock %}
+{% block title %}Modifier une figure
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Trick</h1>
-
-    {{ include('trick/_form.html.twig', {'button_label': 'Update'}) }}
+	<div><img class="newEditBackgroundBigImg" src="/images/home/snowboard.jpg" alt="Image de couverture snowboard"/></div>
+	<div class="text-center">
+		<h1 class="newEditTitle">Editer une figure</h1>
+	</div>
+	<div class="newEditContainer">
+		{{ include('trick/_form.html.twig') }}
+	</div>
 {% endblock %}
 
 {% block javascripts %}

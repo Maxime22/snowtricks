@@ -9,9 +9,17 @@
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
+		<script src="https://kit.fontawesome.com/f9dc03a584.js" crossorigin="anonymous"></script>
 	</head>
 	<body>
+		<header>
+			{{ include('navbar_big.html.twig') }}
+			{{ include('navbar_little.html.twig') }}
+		</header>
 		{% block body %}{% endblock %}
+		<footer>
+			©Copyright Maxime Sabouret
+		</footer>
 	</body>
 	{% block javascripts %}
 		{{ encore_entry_script_tags('app') }}

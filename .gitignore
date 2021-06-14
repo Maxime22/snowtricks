@@ -22,4 +22,19 @@ npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
-/public/images/
+/public/images/tricks/uploads/*
+/public/images/users/uploads
+!/public/images/tricks/uploads/180.jpeg
+!/public/images/tricks/uploads/360.jpeg
+!/public/images/tricks/uploads/540.jpeg
+!/public/images/tricks/uploads/1080.jpeg
+!/public/images/tricks/uploads/indy.jpeg
+!/public/images/tricks/uploads/japan.jpeg
+!/public/images/tricks/uploads/mactwist.jpeg
+!/public/images/tricks/uploads/mute.jpeg
+!/public/images/tricks/uploads/nosegrab.jpeg
+!/public/images/tricks/uploads/sad.jpeg
+!/public/images/tricks/uploads/tailSlide.jpeg
+!/public/images/tricks/uploads/snowboard_main.jpeg
+
+/public/test-coverage

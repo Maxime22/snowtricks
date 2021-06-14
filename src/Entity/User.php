@@ -2,41 +2,49 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity("mail")
  * @UniqueEntity("username")
  */
-class User implements UserInterface,\Serializable
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
+     * @Groups("trick")
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\Length(min=3)
+     * @Groups("comment")
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Email
+     * @Assert\NotBlank
      */
     private $mail;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Regex(pattern="/^(?=.*[!@#$%^&*-])(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,}$/",message="Au moins 8 caractères, un chiffre, une majuscule et un caractère spécial parmi : !@#$%^&*-")
+     * @Assert\NotBlank
      */
     private $password;
 
@@ -62,6 +70,7 @@ class User implements UserInterface,\Serializable
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("comment")
      */
     private $photo;
 
@@ -77,6 +86,7 @@ class User implements UserInterface,\Serializable
 
     /**
      * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="author")
+     * @Groups("trick")
      */
     private $tricks;
 
@@ -177,16 +187,6 @@ class User implements UserInterface,\Serializable
 
     public function eraseCredentials()
     { }
-
-    public function serialize()
-    {
-        return serialize([$this->id, $this->username, $this->password]);
-    }
-
-    public function unserialize($serialized)
-    {
-        list($this->id, $this->username, $this->password) = unserialize($serialized, ['allowed_classes' => false]);
-    }
 
     public function getIsValidated(): ?bool
     {
@@ -294,5 +294,9 @@ class User implements UserInterface,\Serializable
         }
 
         return $this;
+    }
+
+    public function getUserIdentifier(){
+        return $this->username;
     }
 }
