@@ -2,6 +2,21 @@ import $, { htmlPrefilter } from "jquery";
 
 var trickContainer = $(".trickContainer");
 
+var tricksNamesFromInstall = [
+  "snowboard_main.jpeg",
+  "180.jpeg",
+  "360.jpeg",
+  "540.jpeg",
+  "1080.jpeg",
+  "tailSlide.jpeg",
+  "japan.jpeg",
+  "nosegrab.jpeg",
+  "mactwist.jpeg",
+  "mute.jpeg",
+  "sad.jpeg",
+  "indy.jpeg",
+];
+
 var offset = 10;
 
 $("#getMoreTricks").on("click", function () {
@@ -24,10 +39,17 @@ $("#getMoreTricks").on("click", function () {
         var oneTrickContainer = $('<div class="oneTrickContainer"></div>');
         newDiv.append(oneTrickContainer);
         var newImg = $('<img class="trickHomeImg">');
-        newImg.attr(
-          "src",
-          "/images/tricks/uploads/" + newTricks[i].mainImgName
-        );
+        if (tricksNamesFromInstall.includes(newTricks[i].mainImgName)) {
+          newImg.attr(
+            "src",
+            "/images/tricks/" + newTricks[i].mainImgName
+          );
+        }else{
+          newImg.attr(
+            "src",
+            "/images/tricks/uploads/" + newTricks[i].mainImgName
+          );
+        }
         newImg.attr("alt", "snowboard trick " + newTricks[i].id);
         var newTitle = $('<h3 class="d-inline-block"></h3>');
         newTitle.html(newTricks[i].title);
@@ -81,25 +103,3 @@ $("#getMoreTricks").on("click", function () {
     },
   });
 });
-
-$(window).on("resize", function () {
-  navChange();
-});
-
-// when doc is ready
-$(navChange());
-
-function navChange() {
-  var nav = $("nav");
-  if ($(window).width() < 500) {
-    if (nav.hasClass("fixed-top")) {
-      nav.removeClass("fixed-top");
-      nav.addClass("fixed-bottom");
-    }
-  } else {
-    if (nav.hasClass("fixed-bottom")) {
-      nav.removeClass("fixed-bottom");
-      nav.addClass("fixed-top");
-    }
-  }
-}

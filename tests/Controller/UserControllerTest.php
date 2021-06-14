@@ -54,6 +54,4 @@ class UserControllerTest extends WebTestCase{
         $this->assertSelectorExists('.alert.alert-primary');
     }
 
-    // TODO tester l'envoi d'un formulaire dans la page profile (j'ai eu un bug à cause d'un mdp)
-
 }

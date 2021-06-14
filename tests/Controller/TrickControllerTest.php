@@ -39,10 +39,9 @@ class TrickControllerTest extends WebTestCase
         $this->assertResponseRedirects();
     }
 
-    // TODO : change figure0 when fixture will be good for tricks
     public function testShowTrickIsWorking()
     {
-        $this->client->request('GET', '/trick/figure0/1');
+        $this->client->request('GET', '/trick/le-180/1');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
@@ -94,7 +93,7 @@ class TrickControllerTest extends WebTestCase
     }
 
     public function testTricks20Has5Comments(){
-        $crawler = $this->client->request("GET", "/trick/figure19/20");
+        $crawler = $this->client->request("GET", "/trick/le-180/1");
         $this->assertCount(5, $crawler->filter('.commentContainer'));
     }
 
@@ -102,7 +101,7 @@ class TrickControllerTest extends WebTestCase
         $user = $this->em->getRepository(User::class)->findOneBy(["username" => "demo2"]);
         $this->login($this->client, $user);
 
-        $crawler = $this->client->request("GET", "/trick/figure19/20");
+        $crawler = $this->client->request("GET", "/trick/le-180/1");
         $form = $crawler->selectButton('Commenter')->form([
             'comment[title]' => 'demoComment',
             'comment[content]' => 'i am happy to add a comment youpi'
@@ -138,9 +137,8 @@ class TrickControllerTest extends WebTestCase
         $this->login($this->client, $user);
 
         $crawler = $this->client->request("GET", "/trick/1/edit");
-        // TODO change figure0 here
         $form = $crawler->selectButton('Sauvegarder')->form([
-            'trick[title]' => 'Figure0',
+            'trick[title]' => 'Le 180',
             'trick[content]' => 'i am happy to add a content youpi',
             'trick[trickGroup]' => 'slide'
         ]);

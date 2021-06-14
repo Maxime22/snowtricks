@@ -21,7 +21,11 @@
 	</div>
 	<h2>Mon avatar</h2>
 	<div class="text-center">
-		<img id="user_photo_img" src="{{ (user.photo) ? '/images/users/uploads/' ~ user.photo : '' }}">
+		{% if user.photo == "avatar.jpeg" %}
+			<img id="user_photo_img" src="{{ (user.photo) ? '/images/users/' ~ user.photo : '' }}">
+		{% else %}
+			<img id="user_photo_img" src="{{ (user.photo) ? '/images/users/uploads/' ~ user.photo : '' }}">
+		{% endif %}
 	</div>
 	{{ form_row(form.photoFile) }}
 </div>

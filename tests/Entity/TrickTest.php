@@ -59,9 +59,7 @@ class TrickTest extends KernelTestCase
 
     // test the unicity of the slug
     public function testInvalidUsedSlugTrick(){
-        // figure0 is the first slug created by the fixture
-        // TODO : change figure0 when fixture will be good for tricks
-        $trick = $this->getValidEntity()->setSlug("figure0");
+        $trick = $this->getValidEntity()->setSlug("le-180");
         $this->assertHasErrors($trick, 1);
     }
 }

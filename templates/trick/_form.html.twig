@@ -2,7 +2,12 @@
 
 <div class="row">
 	<div>
-		<img class="mainImgForm" id="trick_mainImg_img" src="{{ (trick.mainImgName) ? '/images/tricks/uploads/' ~ trick.mainImgName : '/images/tricks/uploads/snowboard_main.jpeg' }}">
+		{% if trick.mainImgName in tricksNamesFromInstall %}
+			<img class="mainImgForm" id="trick_mainImg_img" src="{{ (trick.mainImgName) ? '/images/tricks/' ~ trick.mainImgName : '/images/tricks/snowboard_main.jpeg' }}">
+		{% else %}
+			<img class="mainImgForm" id="trick_mainImg_img" src="{{ (trick.mainImgName) ? '/images/tricks/uploads/' ~ trick.mainImgName : '/images/tricks/snowboard_main.jpeg' }}">
+		{% endif %}
+
 		<input type="hidden" id="mainImgSrcData" name="mainImgSrcData" value="0">
 	</div>
 	<div class="mainImgInputContainer">
@@ -42,7 +47,9 @@
 			</div>
 			{{ form_widget(form.trickGroup, {'attr': {'class': 'form-select'}}) }}
 		</div>
-		<div class="mt-5"><h3>Images</h3></div>
+		<div class="mt-5">
+			<h3>Images</h3>
+		</div>
 		<div>
 			<button type="button" class="add-another-collection-widget btn btn-primary mb-3" data-list-selector="#photo_field_list">Ajouter une image</button>
 			<div id="photo_field_list" data-prototype="{{ form_widget(form.images.vars.prototype)|e }}" data-ul-type="Photo" data-array-photos="{{ arrayPhotosForPreview is defined ? arrayPhotosForPreview : '' }}" data-widget-counter="{{ form.images|length }}">

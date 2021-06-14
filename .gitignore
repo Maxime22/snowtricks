@@ -22,4 +22,7 @@ npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
-/public/images/
+/public/images/tricks/uploads
+/public/images/users/uploads
+
+/public/test-coverage

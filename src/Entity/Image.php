@@ -26,6 +26,7 @@ class Image
     /**
      * @Assert\Image(
      *  mimeTypes= {"image/jpeg", "image/jpg", "image/png"},
+     *  maxPixels= 1166400,
      *  mimeTypesMessage = "Le fichier ne possède pas une extension valide !",
      *  )
      */
