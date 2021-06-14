@@ -1,6 +1,17 @@
 body .container {
   margin-top: 100px !important;
-  min-height: 550px;
+  min-height: 800px;
+}
+
+.navbarLittle {
+  min-height: 40px;
+}
+
+.navbarLittle a,
+.navbarLittle a:hover, .navbarLittle a i{
+  color: white;
+  text-decoration: none;
+  font-size:50px;
 }
 
 a {
@@ -175,7 +186,7 @@ footer {
   margin-bottom: 10px;
 }
 
-.mainImgInputShowContainer{
+.mainImgInputShowContainer {
   position: absolute;
   right: 5px;
   top: 5px;
@@ -286,20 +297,31 @@ footer {
   border-radius: 400px;
 }
 
-
 label.custom-file-label {
   display: none !important;
 }
 
 /* PROFILE */
 
-#user_photo_img{
+#user_photo_img {
   height: 100px;
   width: 100px;
   object-fit: cover;
   border-radius: 400px;
-  margin-top:20px;
-  margin-bottom:20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+@media all and (max-width: 991px) {
+
+  .logoTitle{
+    height: 100px;
+  }
+
+  .subtitleLogo {
+    font-size: 1rem;
+}
+
 }
 
 @import "~bootstrap/scss/bootstrap";
