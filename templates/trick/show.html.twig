@@ -30,7 +30,8 @@
 		<div class="showTextContainer">
 			<div class="row mt-3">
 				{% for image in trick.images %}
-					<div class="col-md-4 mt-3">
+					<div
+						class="col-md-4 mt-3">
 						{# FROM IMAGE FIXTURE #}
 						{% if image.path == "snowboard_main.jpeg" %}
 							<img class="imgSizeShow" src="{{ asset('images/tricks/' ~ image.path) }}" alt="Image {{ trick.title ~ loop.index }}">
@@ -92,7 +93,11 @@
 						<div class="col-md-12 mt-3 commentContainer">
 							<div class="row">
 								<div class="col-2">
-									<img class="commentAuthorPhoto" src="{{ asset('images/users/uploads/' ~ comment.author.photo) }}" alt={{ "Photo de l'auteur " ~ comment.id }}>
+									{% if comment.author.photo == "avatar.jpeg" %}
+										<img class="commentAuthorPhoto" src="{{ asset('images/users/' ~ comment.author.photo) }}" alt={{ "Photo de l'auteur " ~ comment.id }}>
+									{% else %}
+										<img class="commentAuthorPhoto" src="{{ asset('images/users/uploads/' ~ comment.author.photo) }}" alt={{ "Photo de l'auteur " ~ comment.id }}>
+									{% endif %}
 								</div>
 								<div class="col-10">
 									<div class="titleAndContentCommentContainer">

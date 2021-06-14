@@ -27,6 +27,7 @@ class UserFixtures extends Fixture
             $user = new User();
             $user->setUsername($data['username'][$i]);
             $user->setMail($data['mail'][$i]);
+            $user->setPhoto("avatar.jpeg");
             $user->setCreatedAt();
             $user->setIsValidated(true);
             $user->setPassword($this->passwordHasher->hashPassword($user, "1234Jean%1234"));

@@ -18,7 +18,11 @@ $('#getMoreComments').on("click",function () {
 
                 var newImgContainer = $('<div class="col-2"></div>')
                 var newImg = $('<img class="commentAuthorPhoto">')
-                newImg.attr("src", "/images/users/uploads/"+ newComments[i].author.photo)
+                if(newComments[i].author.photo == "avatar.jpeg"){
+                    newImg.attr("src", "/images/users/"+ newComments[i].author.photo)
+                }else{
+                    newImg.attr("src", "/images/users/uploads/"+ newComments[i].author.photo)
+                }
                 newImg.attr("alt","Photo de l'auteur "+ newComments[i].id)
 
                 var newCol10TitleAndContentContainer = $('<div class="col-10"></div>')
