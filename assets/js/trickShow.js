@@ -16,7 +16,7 @@ $('#getMoreComments').on("click",function () {
                 var newDiv = $('<div class="col-md-12 mt-3 commentContainer"></div>')
                 var newRow = $('<div class="row"></div>')
 
-                var newImgContainer = $('<div class="col-2"></div>')
+                var newImgContainer = $('<div class="col-md-2 mb-3 text-center"></div>')
                 var newImg = $('<img class="commentAuthorPhoto">')
                 if(newComments[i].author.photo == "avatar.jpeg"){
                     newImg.attr("src", "/images/users/"+ newComments[i].author.photo)
@@ -25,7 +25,7 @@ $('#getMoreComments').on("click",function () {
                 }
                 newImg.attr("alt","Photo de l'auteur "+ newComments[i].id)
 
-                var newCol10TitleAndContentContainer = $('<div class="col-10"></div>')
+                var newCol10TitleAndContentContainer = $('<div class="col-md-10"></div>')
                 var newTitleAndContentContainer = $('<div class="titleAndContentCommentContainer"></div>')
                 var newAddedByAndDate = $('<div class="fst-italic"></div>')
                 var d = new Date(newComments[i].createdAt)

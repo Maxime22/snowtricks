@@ -86,9 +86,6 @@ class SecurityControllerTest extends WebTestCase
         ]);
         $this->client->submit($form);
         $this->assertResponseRedirects();
-
-        // we delete the user just added to be able to run the tests again and again !
-        $this->deleteUser("demo3");
     }
 
     public function testSendMailSubscription()
@@ -105,15 +102,6 @@ class SecurityControllerTest extends WebTestCase
         $this->client->submit($form);
         $mailCollector = $this->client->getProfile()->getCollector('mailer');
         $this->assertEquals(1, count($mailCollector->getEvents()->getEvents()));
-
-        // we delete the user just added to be able to run the tests again and again !
-        $this->deleteUser("demo4");
-    }
-
-    public function deleteUser($username){
-        $user = $this->em->getRepository(User::class)->findOneBy(["username" => $username]);
-        $this->em->remove($user);
-        $this->em->flush();
     }
 
     public function testValidateEmail(){
@@ -131,9 +119,6 @@ class SecurityControllerTest extends WebTestCase
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');
-
-        // we delete the user just added to be able to run the tests again and again !
-        $this->deleteUser("demo3");
     }
 
     public function testValidateEmailWrongToken(){

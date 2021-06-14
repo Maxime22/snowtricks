@@ -128,8 +128,6 @@ class TrickControllerTest extends WebTestCase
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertPageTitleSame("SnowTricks");
-
-        $this->deleteTrick('demoComment');
     }
 
     public function testEditTrick(){
@@ -146,11 +144,5 @@ class TrickControllerTest extends WebTestCase
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertPageTitleSame("SnowTricks");
-    }
-
-    public function deleteTrick($title){
-        $trick = $this->em->getRepository(Trick::class)->findOneBy(["title" => $title]);
-        $this->em->remove($trick);
-        $this->em->flush();
     }
 }
