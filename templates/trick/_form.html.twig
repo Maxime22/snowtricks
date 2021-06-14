@@ -42,25 +42,38 @@
 			</div>
 			{{ form_widget(form.trickGroup, {'attr': {'class': 'form-select'}}) }}
 		</div>
-		<div class="mt-5">
-			<h3>Images</h3>
+
+
+		<div class="text-center">
+			<a href="#" id="loadMedia" class="d-block d-lg-none mt-3 mb-3">
+				<button class="btn btn-outline-secondary">Afficher les médias</button>
+			</a>
+			<a href="#" id="hideMedia" class="d-none mt-3 mb-3">
+				<button class="btn btn-outline-secondary">Masquer les médias</button>
+			</a>
 		</div>
-		<div>
-			<button type="button" class="add-another-collection-widget btn btn-primary mb-3" data-list-selector="#photo_field_list">Ajouter une image</button>
-			<div id="photo_field_list" data-prototype="{{ form_widget(form.images.vars.prototype)|e }}" data-ul-type="Photo" data-array-photos="{{ arrayPhotosForPreview is defined ? arrayPhotosForPreview : '' }}" data-widget-counter="{{ form.images|length }}">
-				{{ form_widget(form.images) }}
+		<div class="row mt-3 showMedias d-none d-lg-flex">
+			<div class="mt-5">
+				<h3>Images</h3>
+			</div>
+			<div>
+				<button type="button" class="add-another-collection-widget btn btn-primary mb-3" data-list-selector="#photo_field_list">Ajouter une image</button>
+				<div id="photo_field_list" data-prototype="{{ form_widget(form.images.vars.prototype)|e }}" data-ul-type="Photo" data-array-photos="{{ arrayPhotosForPreview is defined ? arrayPhotosForPreview : '' }}" data-widget-counter="{{ form.images|length }}">
+					{{ form_widget(form.images) }}
+				</div>
+			</div>
+			<h3>Vidéos</h3>
+			<div>
+				<button type="button" class="add-another-collection-widget btn btn-primary mb-3" data-list-selector="#video_field_list">Ajouter une vidéo</button>
+				{{ form_errors(form.videos) }}
+				<div
+					id="video_field_list" data-prototype="{{ form_widget(form.videos.vars.prototype)|e }}" data-ul-type="Video" data-widget-counter="{{ form.videos|length }}">
+					{# Javascript here #}
+					{{ form_widget(form.videos) }}
+				</div>
 			</div>
 		</div>
-		<h3>Vidéos</h3>
-		<div>
-			<button type="button" class="add-another-collection-widget btn btn-primary mb-3" data-list-selector="#video_field_list">Ajouter une vidéo</button>
-			{{ form_errors(form.videos) }}
-			<div
-				id="video_field_list" data-prototype="{{ form_widget(form.videos.vars.prototype)|e }}" data-ul-type="Video" data-widget-counter="{{ form.videos|length }}">
-				{# Javascript here #}
-				{{ form_widget(form.videos) }}
-			</div>
-		</div>
+
 	</div>
 </div>
 {{ form_widget(form) }}
@@ -79,3 +92,7 @@
 		</div>
 	{% endif %}
 {% endif %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags('loadAndHideMedias') }}
+{% endblock %}
