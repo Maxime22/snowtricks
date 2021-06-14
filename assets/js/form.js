@@ -72,7 +72,11 @@ $(function () {
                 
                 // for preview
                 if(ulType === "Photo"){
-                    var newImg = $('<img id="trick_img_'+index+ulType+'" class="imgAddedInForm" src="/images/tricks/uploads/'+arrayPhotos[index]+'"></img>')
+                    if(arrayPhotos[index] == "snowboard_main.jpeg"){
+                        var newImg = $('<img id="trick_img_'+index+ulType+'" class="imgAddedInForm" src="/images/tricks/'+arrayPhotos[index]+'"></img>')
+                    }else{
+                        var newImg = $('<img id="trick_img_'+index+ulType+'" class="imgAddedInForm" src="/images/tricks/uploads/'+arrayPhotos[index]+'"></img>')
+                    }
                     newElem.append(newImg);
                 }
 
