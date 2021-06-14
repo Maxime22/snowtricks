@@ -52,8 +52,7 @@ class UserController extends AbstractController{
         return $this->render('user/index.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
-            'tricks' => $tricks,
-            'tricksNamesFromInstall' => ['snowboard_main.jpeg','180.jpeg','360.jpeg', '540.jpeg', '1080.jpeg', 'tailSlide.jpeg', 'japan.jpeg', 'nosegrab.jpeg', 'mactwist.jpeg', 'mute.jpeg', 'sad.jpeg', 'indy.jpeg']
+            'tricks' => $tricks
         ]);
     }
 

@@ -11,11 +11,7 @@
 	</div>
 
 	<div class="showContainer">
-		{% if trick.mainImgName in tricksNamesFromInstall %}
-			<img class="mainImgShow" src="{{ asset('images/tricks/' ~ trick.mainImgName) }}">
-		{% else %}
-			<img class="mainImgShow" src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}">
-		{% endif %}
+		<img class="mainImgShow" src="{{ asset('images/tricks/uploads/' ~ trick.mainImgName) }}">
 		{% if app.user %}
 			<div class="mainImgInputShowContainer text-center pt-2 pb-2">
 				<a href="{{ path('trick_edit',{id:trick.id})}}">
@@ -32,12 +28,7 @@
 				{% for image in trick.images %}
 					<div
 						class="col-md-4 mt-3">
-						{# FROM IMAGE FIXTURE #}
-						{% if image.path == "snowboard_main.jpeg" %}
-							<img class="imgSizeShow" src="{{ asset('images/tricks/' ~ image.path) }}" alt="Image {{ trick.title ~ loop.index }}">
-						{% else %}
-							<img class="imgSizeShow" src="{{ asset('images/tricks/uploads/' ~ image.path) }}" alt="Image {{ trick.title ~ loop.index }}">
-						{% endif %}
+						<img class="imgSizeShow" src="{{ asset('images/tricks/uploads/' ~ image.path) }}" alt="Image {{ trick.title ~ loop.index }}">
 					</div>
 				{% endfor %}
 				{% for video in trick.videos %}

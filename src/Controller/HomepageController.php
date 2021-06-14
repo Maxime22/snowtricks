@@ -21,8 +21,7 @@ class HomepageController extends AbstractController
         $tricks = $trickRepository->findBy([], null, 10);
 
         return $this->render('homepage/index.html.twig', [
-            'tricks' => $tricks,
-            'tricksNamesFromInstall' => ['snowboard_main.jpeg','180.jpeg','360.jpeg', '540.jpeg', '1080.jpeg', 'tailSlide.jpeg', 'japan.jpeg', 'nosegrab.jpeg', 'mactwist.jpeg', 'mute.jpeg', 'sad.jpeg', 'indy.jpeg']
+            'tricks' => $tricks
         ]);
     }
 

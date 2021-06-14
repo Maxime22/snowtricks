@@ -38,8 +38,7 @@ class TrickController extends AbstractController
 
         return $this->render('trick/new.html.twig', [
             'trick' => $trick,
-            'form' => $form->createView(),
-            'tricksNamesFromInstall' => ['snowboard_main.jpeg','180.jpeg','360.jpeg', '540.jpeg', '1080.jpeg', 'tailSlide.jpeg', 'japan.jpeg', 'nosegrab.jpeg', 'mactwist.jpeg', 'mute.jpeg', 'sad.jpeg', 'indy.jpeg']
+            'form' => $form->createView()
         ]);
     }
 
@@ -67,8 +66,7 @@ class TrickController extends AbstractController
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
             'formComment' => $formComment->createView(),
-            'comments' => $comments,
-            'tricksNamesFromInstall' => ['snowboard_main.jpeg','180.jpeg','360.jpeg', '540.jpeg', '1080.jpeg', 'tailSlide.jpeg', 'japan.jpeg', 'nosegrab.jpeg', 'mactwist.jpeg', 'mute.jpeg', 'sad.jpeg', 'indy.jpeg']
+            'comments' => $comments
         ]);
     }
 
@@ -97,8 +95,7 @@ class TrickController extends AbstractController
         return $this->render('trick/edit.html.twig', [
             'trick' => $trick,
             'form' => $form->createView(),
-            'arrayPhotosForPreview' => isset($arrayPhotoNames) ? json_encode($arrayPhotoNames) : '',
-            'tricksNamesFromInstall' => ['snowboard_main.jpeg','180.jpeg','360.jpeg', '540.jpeg', '1080.jpeg', 'tailSlide.jpeg', 'japan.jpeg', 'nosegrab.jpeg', 'mactwist.jpeg', 'mute.jpeg', 'sad.jpeg', 'indy.jpeg']
+            'arrayPhotosForPreview' => isset($arrayPhotoNames) ? json_encode($arrayPhotoNames) : ''
         ]);
     }
 
@@ -115,14 +112,15 @@ class TrickController extends AbstractController
             // Delete all images linked to the trick
             $images = $imageRepository->findBy(['trick' => $trick]);
             foreach ($images as $image) {
-                if ($image->getPath()) {
+                // the images in the ina_array are the images that we should'nt delete, they are used in the fixture
+                if ($image->getPath() && !in_array($image->getPath(),['snowboard_main.jpeg','180.jpeg','360.jpeg', '540.jpeg', '1080.jpeg', 'tailSlide.jpeg', 'japan.jpeg', 'nosegrab.jpeg', 'mactwist.jpeg', 'mute.jpeg', 'sad.jpeg', 'indy.jpeg'])) {
                     if (file_exists($this->getParameter('trickUpload_directory') . "/" . $image->getPath())) {
                         $fileToDelete = new File($this->getParameter('trickUpload_directory') . "/" . $image->getPath());
                         $this->deleteFile($fileToDelete);
                     }
                 }
             }
-            if ($trick->getMainImgName()) {
+            if ($trick->getMainImgName() && $trick->getMainImgName() !== "snowboard_main.jpeg") {
                 if (file_exists($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName())) {
                     $mainImgTodelete = new File($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
                     $this->deleteFile($mainImgTodelete);
@@ -148,7 +146,7 @@ class TrickController extends AbstractController
 
         if ($mainImgFile) {
             $oldFile = null;
-            if ($trick->getMainImgName()) {
+            if ($trick->getMainImgName() && $trick->getMainImgName() !== "snowboard_main.jpeg") {
                 if (file_exists($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName())) {
                     $oldFile = new File($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
                 }

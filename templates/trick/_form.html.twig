@@ -2,12 +2,7 @@
 
 <div class="row">
 	<div>
-		{% if trick.mainImgName in tricksNamesFromInstall %}
-			<img class="mainImgForm" id="trick_mainImg_img" src="{{ (trick.mainImgName) ? '/images/tricks/' ~ trick.mainImgName : '/images/tricks/snowboard_main.jpeg' }}">
-		{% else %}
-			<img class="mainImgForm" id="trick_mainImg_img" src="{{ (trick.mainImgName) ? '/images/tricks/uploads/' ~ trick.mainImgName : '/images/tricks/snowboard_main.jpeg' }}">
-		{% endif %}
-
+		<img class="mainImgForm" id="trick_mainImg_img" src="{{ (trick.mainImgName) ? '/images/tricks/uploads/' ~ trick.mainImgName : '/images/tricks/snowboard_main.jpeg' }}">
 		<input type="hidden" id="mainImgSrcData" name="mainImgSrcData" value="0">
 	</div>
 	<div class="mainImgInputContainer">
