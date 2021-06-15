@@ -33,7 +33,7 @@ class TrickController extends AbstractController
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $checkAndPersistTrickForm->persistValidForm($request, $form, $trick, $author);
+            $checkAndPersistTrickForm->persistValidForm($request, $form, $trick, ["author" => $author, "arrayPhotoNames" => null]);
             return $this->redirectToRoute('home');
         }
 
@@ -89,7 +89,7 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $checkAndPersistTrickForm->persistValidForm($request, $form, $trick, null, $arrayPhotoNames);
+            $checkAndPersistTrickForm->persistValidForm($request, $form, $trick, ["author" => null, "arrayPhotoNames" => $arrayPhotoNames]);
             return $this->redirectToRoute('home');
         }
 
@@ -114,7 +114,7 @@ class TrickController extends AbstractController
             $images = $imageRepository->findBy(['trick' => $trick]);
             foreach ($images as $image) {
                 // the images in the ina_array are the images that we should'nt delete, they are used in the fixture
-                if ($image->getPath() && !in_array($image->getPath(),['snowboard_main.jpeg','180.jpeg','360.jpeg', '540.jpeg', '1080.jpeg', 'tailSlide.jpeg', 'japan.jpeg', 'nosegrab.jpeg', 'mactwist.jpeg', 'mute.jpeg', 'sad.jpeg', 'indy.jpeg'])) {
+                if ($image->getPath() && !in_array($image->getPath(), ['snowboard_main.jpeg', '180.jpeg', '360.jpeg', '540.jpeg', '1080.jpeg', 'tailSlide.jpeg', 'japan.jpeg', 'nosegrab.jpeg', 'mactwist.jpeg', 'mute.jpeg', 'sad.jpeg', 'indy.jpeg'])) {
                     if (file_exists($this->getParameter('trickUpload_directory') . "/" . $image->getPath())) {
                         $fileToDelete = new File($this->getParameter('trickUpload_directory') . "/" . $image->getPath());
                         $this->deleteFile($fileToDelete);

@@ -23,7 +23,7 @@ class CheckAndPersistTrickForm
         $this->container = $container;
     }
 
-    public function persistValidForm(Request $request, FormInterface $form, Trick $trick, $author = null, $oldImages = null)
+    public function persistValidForm(Request $request, FormInterface $form, Trick $trick, $datas)
     {
         /** @var UploadedFile $mainImgFile */
         $mainImgFile = $form->get('mainImg')->getData();
@@ -33,13 +33,8 @@ class CheckAndPersistTrickForm
         $videos = $form->get('videos')->getData();
 
         if ($mainImgFile) {
-            $oldFile = null;
-            if ($trick->getMainImgName() && $trick->getMainImgName() !== "snowboard_main.jpeg") {
-                if (file_exists($this->container->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName())) {
-                    $oldFile = new File($this->container->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
-                }
-            }
-            $newFilename = $this->fileUploader->upload($mainImgFile, $this->container->getParameter('trickUpload_directory'), $oldFile);
+            $oldFileMainImg = $this->checkMainImgAndReturnOldFile($trick);
+            $newFilename = $this->fileUploader->upload($mainImgFile, $this->container->getParameter('trickUpload_directory'), $oldFileMainImg);
             $trick->setMainImgName($newFilename);
         } else if (!$trick->getMainImgName() || $mainImgSrcData === "1") {
             $trick->setMainImgName('snowboard_main.jpeg');
@@ -48,12 +43,12 @@ class CheckAndPersistTrickForm
         // update images
         $newImages = $this->updateImages($trick);
 
+        $author=$datas['author'];
+        $oldImages=$datas['arrayPhotoNames'];
         // Delete image files
         $this->deleteOldImageFiles($oldImages, $newImages);
 
         $this->setAndPersist($author, $trick, $videos);
-
-        
     }
 
     private function setAndPersist($author, Trick $trick, $videos){
@@ -74,19 +69,22 @@ class CheckAndPersistTrickForm
         if ($images) {
             foreach ($images as $image) {
                 if ($image->getFile() || $image->getPath()) {
-                    if ($image->getFile() !== null) {
-                        $newFilename = $this->fileUploader->upload($image->getFile(), $this->container->getParameter('trickUpload_directory'));
-                        $newImages[] = $newFilename;
-                    }
-                    if ($image->getFile() === null) {
-                        $newFilename = $image->getPath();
-                        $newImages[] = $newFilename;
-                    }
-                    $image->setPath($newFilename);
+                    $newImages = $this->updateNewImages($image, $newImages);
                     $image->setTrick($trick);
                 }
             }
         }
+        return $newImages;
+    }
+
+    private function updateNewImages($image, $newImages){
+        if ($image->getFile() !== null) {
+            $newFilename = $this->fileUploader->upload($image->getFile(), $this->container->getParameter('trickUpload_directory'));
+        } else {
+            $newFilename = $image->getPath();
+        }
+        $newImages[] = $newFilename;
+        $image->setPath($newFilename);
         return $newImages;
     }
 
@@ -107,5 +105,15 @@ class CheckAndPersistTrickForm
         if (file_exists($fileToDelete->getPathname())) {
             unlink($fileToDelete);
         }
+    }
+
+    private function checkMainImgAndReturnOldFile($trick){
+        $oldFile = null;
+        if ($trick->getMainImgName() && $trick->getMainImgName() !== "snowboard_main.jpeg") {
+            if (file_exists($this->container->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName())) {
+                $oldFile = new File($this->container->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
+            }
+        }
+        return $oldFile;
     }
 }
