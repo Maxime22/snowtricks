@@ -43,15 +43,18 @@ class CheckAndPersistTrickForm
         // update images
         $newImages = $this->updateImages($trick);
 
-        $author=$datas['author'];
-        $oldImages=$datas['arrayPhotoNames'];
+        $author = $datas['author'];
+        $oldImages = $datas['arrayPhotoNames'];
         // Delete image files
-        $this->deleteOldImageFiles($oldImages, $newImages);
+        if ($oldImages) {
+            $this->deleteOldImageFiles($oldImages, $newImages);
+        }
 
         $this->setAndPersist($author, $trick, $videos);
     }
 
-    private function setAndPersist($author, Trick $trick, $videos){
+    private function setAndPersist($author, Trick $trick, $videos)
+    {
         // author is null in the edit
         if ($author) {
             $trick->setAuthor($author);
@@ -63,7 +66,8 @@ class CheckAndPersistTrickForm
         $this->em->flush();
     }
 
-    private function updateImages(Trick $trick){
+    private function updateImages(Trick $trick)
+    {
         $images = $trick->getImages();
         $newImages = [];
         if ($images) {
@@ -77,7 +81,8 @@ class CheckAndPersistTrickForm
         return $newImages;
     }
 
-    private function updateNewImages($image, $newImages){
+    private function updateNewImages($image, $newImages)
+    {
         if ($image->getFile() !== null) {
             $newFilename = $this->fileUploader->upload($image->getFile(), $this->container->getParameter('trickUpload_directory'));
         } else {
@@ -88,14 +93,13 @@ class CheckAndPersistTrickForm
         return $newImages;
     }
 
-    private function deleteOldImageFiles($oldImages, $newImages){
-        if ($oldImages) {
-            $imagesToDelete = array_diff($oldImages, $newImages);
-            foreach ($imagesToDelete as $imageToDelete) {
-                if (file_exists($this->container->getParameter('trickUpload_directory') . "/" . $imageToDelete)) {
-                    $fileToDelete = new File($this->container->getParameter('trickUpload_directory') . "/" . $imageToDelete);
-                    $this->deleteFile($fileToDelete);
-                }
+    private function deleteOldImageFiles($oldImages, $newImages)
+    {
+        $imagesToDelete = array_diff($oldImages, $newImages);
+        foreach ($imagesToDelete as $imageToDelete) {
+            if (file_exists($this->container->getParameter('trickUpload_directory') . "/" . $imageToDelete)) {
+                $fileToDelete = new File($this->container->getParameter('trickUpload_directory') . "/" . $imageToDelete);
+                $this->deleteFile($fileToDelete);
             }
         }
     }
@@ -107,7 +111,8 @@ class CheckAndPersistTrickForm
         }
     }
 
-    private function checkMainImgAndReturnOldFile($trick){
+    private function checkMainImgAndReturnOldFile($trick)
+    {
         $oldFile = null;
         if ($trick->getMainImgName() && $trick->getMainImgName() !== "snowboard_main.jpeg") {
             if (file_exists($this->container->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName())) {
