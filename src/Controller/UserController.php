@@ -49,11 +49,7 @@ class UserController extends AbstractController{
             return $this->redirectToRoute('profile', ['id'=>$user->getId()]);
         }
 
-        return $this->render('user/index.html.twig', [
-            'user' => $user,
-            'form' => $form->createView(),
-            'tricks' => $tricks
-        ]);
+        return $this->render('user/index.html.twig', ['user' => $user,'form' => $form->createView(),'tricks' => $tricks]);
     }
 
 }
