@@ -48,32 +48,12 @@ $("#getMoreTricks").on("click", function () {
         newDivLinkShow.append(newLinkShow);
         // if a user is connected, user is an object
         if (data.user && data.user.id) {
-          var newLinkEdit = $("<a></a>");
-          newLinkEdit.attr("href", "/trick/" + newTricks[i].id + "/edit");
-          newLinkEdit.html("<i class='fas fa-edit ms-3'></i>");
-          newDivLinkShow.append(newLinkEdit);
-          // if the user created tricks
-          if (
-            tabOfUserTricksIds &&
-            tabOfUserTricksIds.includes(newTricks[i].id)
-          ) {
-            var newIndicationDelete = $("<span></span>");
-            newIndicationDelete.html(
-              "<i class='fas fa-trash-alt ms-3 text-danger'></i>"
-            );
-            newDivLinkShow.append(newIndicationDelete);
-          }
+          createEditAndDeleteButtons(newDivLinkShow, newTricks, tabOfUserTricksIds, i)
         }
         oneTrickContainer.append(newDivLinkShow);
         trickContainer.append(newDiv);
       }
-      if (newTricks.length < 10) {
-        // display none
-        $("#getMoreTricks").hide();
-      }
-      if (newTricks.length > 4) {
-        $(".goUpContainer").show();
-      }
+      hideAndShowGetMoreTricks(newTricks)
       offset += 10;
     },
     error: function () {
@@ -81,3 +61,31 @@ $("#getMoreTricks").on("click", function () {
     },
   });
 });
+
+function createEditAndDeleteButtons(newDivLinkShow, newTricks, tabOfUserTricksIds, index){
+  var newLinkEdit = $("<a></a>");
+  newLinkEdit.attr("href", "/trick/" + newTricks[index].id + "/edit");
+  newLinkEdit.html("<i class='fas fa-edit ms-3'></i>");
+  newDivLinkShow.append(newLinkEdit);
+  // if the user created tricks
+  if (
+    tabOfUserTricksIds &&
+    tabOfUserTricksIds.includes(newTricks[index].id)
+  ) {
+    var newIndicationDelete = $("<span></span>");
+    newIndicationDelete.html(
+      "<i class='fas fa-trash-alt ms-3 text-danger'></i>"
+    );
+    newDivLinkShow.append(newIndicationDelete);
+  }
+}
+
+function hideAndShowGetMoreTricks(newTricks){
+  if (newTricks.length < 10) {
+    // display none
+    $("#getMoreTricks").hide();
+  }
+  if (newTricks.length > 4) {
+    $(".goUpContainer").show();
+  }
+}

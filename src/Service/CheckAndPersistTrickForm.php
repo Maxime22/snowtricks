@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Trick;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\File;
@@ -16,7 +16,7 @@ class CheckAndPersistTrickForm
     private $fileUploader;
     private $container;
 
-    public function __construct(EntityManager $em, FileUploader $fileUploader, ContainerInterface $container)
+    public function __construct(EntityManagerInterface $em, FileUploader $fileUploader, ContainerInterface $container)
     {
         $this->em = $em;
         $this->fileUploader = $fileUploader;

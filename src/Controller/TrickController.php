@@ -6,7 +6,6 @@ use App\Entity\Trick;
 use App\Entity\Comment;
 use App\Form\TrickType;
 use App\Form\CommentType;
-use App\Service\FileUploader;
 use App\Repository\UserRepository;
 use App\Repository\CommentRepository;
 use App\Repository\ImageRepository;
@@ -15,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
@@ -25,7 +23,7 @@ class TrickController extends AbstractController
      * @Route("/trick/new", name="trick_new", methods={"GET","POST"})
      * @IsGranted("ROLE_USER")
      */
-    public function new(Request $request, FileUploader $fileUploader, UserRepository $userRepository, CheckAndPersistTrickForm $checkAndPersistTrickForm): Response
+    public function new(Request $request, UserRepository $userRepository, CheckAndPersistTrickForm $checkAndPersistTrickForm): Response
     {
         $trick = new Trick();
 
