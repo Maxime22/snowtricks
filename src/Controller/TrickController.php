@@ -110,27 +110,38 @@ class TrickController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             // Delete all images linked to the trick
             $images = $imageRepository->findBy(['trick' => $trick]);
+
             foreach ($images as $image) {
-                // the images in the ina_array are the images that we should'nt delete, they are used in the fixture
-                if ($image->getPath() && !in_array($image->getPath(), ['snowboard_main.jpeg', '180.jpeg', '360.jpeg', '540.jpeg', '1080.jpeg', 'tailSlide.jpeg', 'japan.jpeg', 'nosegrab.jpeg', 'mactwist.jpeg', 'mute.jpeg', 'sad.jpeg', 'indy.jpeg'])) {
-                    if (file_exists($this->getParameter('trickUpload_directory') . "/" . $image->getPath())) {
-                        $fileToDelete = new File($this->getParameter('trickUpload_directory') . "/" . $image->getPath());
-                        $this->deleteFile($fileToDelete);
-                    }
-                }
+                $this->deleteUploadedImage($image);
             }
-            if ($trick->getMainImgName() && $trick->getMainImgName() !== "snowboard_main.jpeg") {
-                if (file_exists($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName())) {
-                    $mainImgTodelete = new File($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
-                    $this->deleteFile($mainImgTodelete);
-                }
-            }
+            $this->deleteMainImg($trick);
 
             $em->remove($trick);
             $em->flush();
         }
 
         return $this->redirectToRoute('home');
+    }
+
+    public function deleteMainImg($trick)
+    {
+        if ($trick->getMainImgName() && $trick->getMainImgName() !== "snowboard_main.jpeg") {
+            if (file_exists($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName())) {
+                $mainImgTodelete = new File($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
+                $this->deleteFile($mainImgTodelete);
+            }
+        }
+    }
+
+    public function deleteUploadedImage($image)
+    {
+        // the images in the in_array are the images that we should'nt delete, they are used in the fixture
+        if ($image->getPath() && !in_array($image->getPath(), ['snowboard_main.jpeg', '180.jpeg', '360.jpeg', '540.jpeg', '1080.jpeg', 'tailSlide.jpeg', 'japan.jpeg', 'nosegrab.jpeg', 'mactwist.jpeg', 'mute.jpeg', 'sad.jpeg', 'indy.jpeg'])) {
+            if (file_exists($this->getParameter('trickUpload_directory') . "/" . $image->getPath())) {
+                $fileToDelete = new File($this->getParameter('trickUpload_directory') . "/" . $image->getPath());
+                $this->deleteFile($fileToDelete);
+            }
+        }
     }
 
     private function deleteFile($fileToDelete)
