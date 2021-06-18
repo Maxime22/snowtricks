@@ -6,15 +6,14 @@ use App\Entity\Trick;
 use App\Entity\Comment;
 use App\Form\TrickType;
 use App\Form\CommentType;
-use App\Service\FileUploader;
 use App\Repository\UserRepository;
 use App\Repository\CommentRepository;
 use App\Repository\ImageRepository;
+use App\Service\CheckAndPersistTrickForm;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
@@ -24,7 +23,7 @@ class TrickController extends AbstractController
      * @Route("/trick/new", name="trick_new", methods={"GET","POST"})
      * @IsGranted("ROLE_USER")
      */
-    public function new(Request $request, FileUploader $fileUploader, UserRepository $userRepository): Response
+    public function new(Request $request, UserRepository $userRepository, CheckAndPersistTrickForm $checkAndPersistTrickForm): Response
     {
         $trick = new Trick();
 
@@ -32,7 +31,7 @@ class TrickController extends AbstractController
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->persistValidForm($request, $form, $fileUploader, $trick, $author);
+            $checkAndPersistTrickForm->persistValidForm($request, $form, $trick, ["author" => $author, "arrayPhotoNames" => null]);
             return $this->redirectToRoute('home');
         }
 
@@ -74,7 +73,7 @@ class TrickController extends AbstractController
      * @Route("/trick/{id}/edit", name="trick_edit", methods={"GET","POST"}, requirements={"id":"\d+"})
      * @IsGranted("ROLE_USER")
      */
-    public function edit(Request $request, Trick $trick, FileUploader $fileUploader, ImageRepository $imageRepository): Response
+    public function edit(Request $request, Trick $trick, ImageRepository $imageRepository, CheckAndPersistTrickForm $checkAndPersistTrickForm): Response
     {
         $images = $imageRepository->findBy(['trick' => $trick]);
 
@@ -88,7 +87,7 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->persistValidForm($request, $form, $fileUploader, $trick, null, $arrayPhotoNames);
+            $checkAndPersistTrickForm->persistValidForm($request, $form, $trick, ["author" => null, "arrayPhotoNames" => $arrayPhotoNames]);
             return $this->redirectToRoute('home');
         }
 
@@ -111,21 +110,11 @@ class TrickController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             // Delete all images linked to the trick
             $images = $imageRepository->findBy(['trick' => $trick]);
+
             foreach ($images as $image) {
-                // the images in the ina_array are the images that we should'nt delete, they are used in the fixture
-                if ($image->getPath() && !in_array($image->getPath(),['snowboard_main.jpeg','180.jpeg','360.jpeg', '540.jpeg', '1080.jpeg', 'tailSlide.jpeg', 'japan.jpeg', 'nosegrab.jpeg', 'mactwist.jpeg', 'mute.jpeg', 'sad.jpeg', 'indy.jpeg'])) {
-                    if (file_exists($this->getParameter('trickUpload_directory') . "/" . $image->getPath())) {
-                        $fileToDelete = new File($this->getParameter('trickUpload_directory') . "/" . $image->getPath());
-                        $this->deleteFile($fileToDelete);
-                    }
-                }
+                $this->deleteUploadedImage($image);
             }
-            if ($trick->getMainImgName() && $trick->getMainImgName() !== "snowboard_main.jpeg") {
-                if (file_exists($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName())) {
-                    $mainImgTodelete = new File($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
-                    $this->deleteFile($mainImgTodelete);
-                }
-            }
+            $this->deleteMainImg($trick);
 
             $em->remove($trick);
             $em->flush();
@@ -134,69 +123,25 @@ class TrickController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-    private function persistValidForm($request, $form, $fileUploader, $trick, $author = null, $oldImages = null)
+    public function deleteMainImg($trick)
     {
-        $em = $this->getDoctrine()->getManager();
-        /** @var UploadedFile $mainImgFile */
-        $mainImgFile = $form->get('mainImg')->getData();
-
-        $mainImgSrcData = $request->request->get('mainImgSrcData');
-
-        $videos = $form->get('videos')->getData();
-
-        if ($mainImgFile) {
-            $oldFile = null;
-            if ($trick->getMainImgName() && $trick->getMainImgName() !== "snowboard_main.jpeg") {
-                if (file_exists($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName())) {
-                    $oldFile = new File($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
-                }
-            }
-            $newFilename = $fileUploader->upload($mainImgFile, $this->getParameter('trickUpload_directory'), $oldFile);
-            $trick->setMainImgName($newFilename);
-        } else if (!$trick->getMainImgName() || $mainImgSrcData === "1") {
-            $trick->setMainImgName('snowboard_main.jpeg');
-        }
-
-        // update images
-        $images = $trick->getImages();
-        $newImages = [];
-        if ($images) {
-            foreach ($images as $image) {
-                if ($image->getFile() || $image->getPath()) {
-                    if ($image->getFile() !== null) {
-                        $newFilename = $fileUploader->upload($image->getFile(), $this->getParameter('trickUpload_directory'));
-                        $newImages[] = $newFilename;
-                    }
-                    if ($image->getFile() === null) {
-                        $newFilename = $image->getPath();
-                        $newImages[] = $newFilename;
-                    }
-                    $image->setPath($newFilename);
-                    $image->setTrick($trick);
-                }
+        if ($trick->getMainImgName() && $trick->getMainImgName() !== "snowboard_main.jpeg") {
+            if (file_exists($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName())) {
+                $mainImgTodelete = new File($this->getParameter('trickUpload_directory') . "/" . $trick->getMainImgName());
+                $this->deleteFile($mainImgTodelete);
             }
         }
+    }
 
-        // Delete image files
-        if ($oldImages) {
-            $imagesToDelete = array_diff($oldImages, $newImages);
-            foreach ($imagesToDelete as $imageToDelete) {
-                if (file_exists($this->getParameter('trickUpload_directory') . "/" . $imageToDelete)) {
-                    $fileToDelete = new File($this->getParameter('trickUpload_directory') . "/" . $imageToDelete);
-                    $this->deleteFile($fileToDelete);
-                }
+    public function deleteUploadedImage($image)
+    {
+        // the images in the in_array are the images that we should'nt delete, they are used in the fixture
+        if ($image->getPath() && !in_array($image->getPath(), ['snowboard_main.jpeg', '180.jpeg', '360.jpeg', '540.jpeg', '1080.jpeg', 'tailSlide.jpeg', 'japan.jpeg', 'nosegrab.jpeg', 'mactwist.jpeg', 'mute.jpeg', 'sad.jpeg', 'indy.jpeg'])) {
+            if (file_exists($this->getParameter('trickUpload_directory') . "/" . $image->getPath())) {
+                $fileToDelete = new File($this->getParameter('trickUpload_directory') . "/" . $image->getPath());
+                $this->deleteFile($fileToDelete);
             }
         }
-
-        // author is null in the edit
-        if ($author) {
-            $trick->setAuthor($author);
-        }
-        $trick->setVideos($videos);
-        $trick->setCreatedAt();
-
-        $em->persist($trick);
-        $em->flush();
     }
 
     private function deleteFile($fileToDelete)

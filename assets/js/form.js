@@ -52,40 +52,19 @@ $(function () {
     function fillList(list, ulType){
         // for preview
         var arrayPhotos = list.data('array-photos')
-        var customFiles = null
+        var customFilesPhotos = null
 
         var container = list.children()
         if(ulType === "Photo" && arrayPhotos){
-            customFiles = container.children('.mb-3').children('div').clone()
+            customFilesPhotos = container.children('.mb-3').children('div').clone()
         }
 
         if(ulType === "Video"){
             var customVideos = container.children().children('input')
         }
 
-        if (customFiles){
-            customFiles.each(function( index ) {
-                var newElem = $('<div id=elementNumber'+index+ulType+' class="col-4 mb-5"></div>')
-                // each this is a div with the class custom-file
-                newElem.append($(this))
-                var deleteButton = '<a class="delete'+ulType+' mt-2" data-selector="'+ index + ulType +'" ><i class="fas fa-trash-alt ms-3 text-danger"></i></a>'
-                
-                // for preview
-                if(ulType === "Photo"){
-                    var newImg = $('<img id="trick_img_'+index+ulType+'" class="imgAddedInForm" src="/images/tricks/uploads/'+arrayPhotos[index]+'"></img>')
-                    newElem.append(newImg);
-                }
-
-                newElem.append(deleteButton);
-                newElem.appendTo(container);
-                
-                // for preview, we need to create addEventListener after we create the element in the DOM
-                if(ulType === "Photo"){
-                    $(this).children('.mb-3').children('input').on('change',function(){
-                        readURL(this,'trick_img_'+index+ulType);
-                    });
-                }
-            });
+        if (customFilesPhotos){
+            createExistingElements(customFilesPhotos, ulType, arrayPhotos, container)
         }
 
         if(customVideos){
@@ -100,6 +79,27 @@ $(function () {
         if(ulType === "Photo"){
             container.children('.mb-3').remove();
         }
+    }
+
+    function createExistingElements(customFilesPhotos, ulType, arrayPhotos, container){
+        customFilesPhotos.each(function( index ) {
+            var newElem = $('<div id=elementNumber'+index+ulType+' class="col-4 mb-5"></div>')
+            // each this is a div with the class custom-file
+            newElem.append($(this))
+            var deleteButton = '<a class="delete'+ulType+' mt-2" data-selector="'+ index + ulType +'" ><i class="fas fa-trash-alt ms-3 text-danger"></i></a>'
+            
+            // for preview
+            var newImg = $('<img id="trick_img_'+index+ulType+'" class="imgAddedInForm" src="/images/tricks/uploads/'+arrayPhotos[index]+'"></img>')
+            newElem.append(newImg);
+
+            newElem.append(deleteButton);
+            newElem.appendTo(container);
+            
+            // for preview, we need to create addEventListener after we create the element in the DOM
+            $(this).children('.mb-3').children('input').on('change',function(){
+                readURL(this,'trick_img_'+index+ulType);
+            });
+        });
     }
 
     // add
