@@ -30,7 +30,7 @@ $('#getMoreComments').on("click",function () {
                 var newAddedByAndDate = $('<div class="fst-italic"></div>')
                 var d = new Date(newComments[i].createdAt)
                 var year = d.getFullYear() 
-                var month = ('0' + d.getDate()).slice(-2)
+                var month = ('0' + d.getMonth()).slice(-2)
                 var day = ('0' + d.getDay()).slice(-2)
                 newAddedByAndDate.html('Ajouté le '+ day+'/'+ month +'/'+ year  +' par '+ newComments[i].author.username +' :')
                 var newTitle = $('<div class="fw-bold"></div>')
