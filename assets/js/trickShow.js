@@ -29,8 +29,6 @@ $('#getMoreComments').on("click",function () {
                 var newTitleAndContentContainer = $('<div class="titleAndContentCommentContainer"></div>')
                 var newAddedByAndDate = $('<div class="fst-italic"></div>')
                 var d = new Date(newComments[i].createdAt)
-                console.log(newComments[i].createdAt)
-                console.log(d)
                 var year = d.getFullYear() 
                 var month = ('0' + (d.getMonth()+1)).slice(-2)
                 var day = ('0' + d.getDate()).slice(-2)
